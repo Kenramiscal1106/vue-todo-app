@@ -24,6 +24,9 @@ function addValue() {
     <div v-if="counter < 0" style="color:red">
       Warning: below 0
     </div>
+    <div v-else-if="counter > 10" style="color:red">
+      Warning: above 10
+    </div>
   </main>
 </template>
 
