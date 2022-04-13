@@ -1,31 +1,46 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, watchEffect, type Ref } from 'vue';
-import TodoVue from './components/Todo.vue';
-
-  const todo:Ref<string> = ref("some todo");
+  import { onMounted, ref, watch, watchEffect, type Ref } from 'vue';
+type todos = {
+  deadline?:string
+  done:boolean
+  id:number
+  text:string
+}
+  const todoItems:Ref<todos[] | []> = ref([])
   onMounted(() => {
-    const todoLocalStorage = localStorage.getItem('todo')
-    if (todoLocalStorage && typeof todoLocalStorage === "string") {
-      todo.value = todoLocalStorage;
+    const todoLocalStorage:string | null = localStorage.getItem('todos');
+    if (todoLocalStorage) {
+      todoItems.value = JSON.parse(todoLocalStorage)
     }
   })
-  watch(todo, () => {
-    localStorage.setItem('todo', todo.value)
+  watch(todoItems, () => {
+    localStorage.setItem('todos', JSON.stringify(todoItems.value))
   })
-  function updateTodo(todos:string) {
-    todo.value = todos
-  }
-  function todos() {
-    return todo
+  const todoInput:Ref<string> = ref("")
+  function addTodo() {
+    todoItems.value = [
+      ...todoItems.value, {
+        done:false,
+        id:Math.random() *1000,
+        text:todoInput.value
+      }
+    ]
   }
 </script>
 
 <template>
   <main>
-    <button @click="() => {updateTodo('todos')}">
-      {{todo}}
-      <TodoVue :todo="todo" :todoRef="todos()"/>
-    </button>
+    <form @submit.prevent="addTodo">
+      <input type="text" v-model="todoInput"><button type="submit">Submit</button>
+    </form>
+    <div v-if="todoItems.length !== 0">
+      <div v-for="todoItem in todoItems">
+        <p>{{todoItem.text}}</p>
+      </div>
+    </div>
+    <div v-else>
+      <p>There are no todos</p>
+    </div>
   </main>
 </template>
 
