@@ -1,94 +1,33 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-const counter = ref(0)
-function addValue() {
-    console.log(counter.value)
-    counter.value++
-}
+import { onMounted, ref, watch, watchEffect, type Ref } from 'vue';
+import TodoVue from './components/Todo.vue';
+
+  const todo:Ref<string> = ref("some todo");
+  onMounted(() => {
+    const todoLocalStorage = localStorage.getItem('todo')
+    if (todoLocalStorage && typeof todoLocalStorage === "string") {
+      todo.value = todoLocalStorage;
+    }
+  })
+  watch(todo, () => {
+    localStorage.setItem('todo', todo.value)
+  })
+  function updateTodo(todos:string) {
+    todo.value = todos
+  }
+  function todos() {
+    return todo
+  }
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
   <main>
-    <button v-on:click="counter++">click me to add:</button>{{ counter }}
-    <button @click.click="counter--">click me to subtract</button>
-    <div v-if="counter < 0" style="color:red">
-      Warning: below 0
-    </div>
-    <div v-else-if="counter > 10" style="color:red">
-      Warning: above 10
-    </div>
+    <button @click="() => {updateTodo('todos')}">
+      {{todo}}
+      <TodoVue :todo="todo" :todoRef="todos()"/>
+    </button>
   </main>
 </template>
 
 <style>
-@import './assets/base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
-}
-
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-}
 </style>
