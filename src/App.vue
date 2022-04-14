@@ -6,6 +6,35 @@ type todos = {
   id:number
   text:string
 }
+type date = {
+  timeString:string;
+  hour:number,
+  minute:number,
+  seconds:number
+}
+  function currentTime():{[key:string]:date} {
+    const time = new Date();
+    const hour12:date = {
+      hour: (time.getHours() > 12 ? time.getHours() - 12 : time.getHours()),
+      minute:time.getMinutes(),
+      seconds:time.getSeconds(),
+      timeString:`${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()}`
+    }
+    const hour24:date = {
+      hour: time.getHours(),
+      minute:time.getMinutes(),
+      seconds:time.getSeconds(),
+      timeString:`${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()}`
+    }
+    return {
+      hour12,
+      hour24
+    }
+  }
+  const time:Ref<string> = ref(currentTime().hour12.timeString);
+  setInterval(async () => {
+    time.value = currentTime().hour12.timeString
+  }, 1000)
   const todoItems:Ref<todos[]> = ref([])
   onMounted(() => {
     const todoLocalStorage:string | null = localStorage.getItem('todos');
@@ -13,11 +42,11 @@ type todos = {
       todoItems.value = JSON.parse(todoLocalStorage)
     }
   })
-  
+  const isValidDeadline:Ref<boolean> = ref(true);
   const todoInput:Ref<string> = ref("")
   const todoDeadline:Ref<string> = ref("")
   function addTodo() {
-    if (todoInput.value != "") {
+    if (todoInput.value != "" && isValidDeadline.value) {
       todoItems.value = [...todoItems.value, {
           done:false,
           id:Math.random() *1000,
@@ -28,7 +57,13 @@ type todos = {
       todoDeadline.value = ""
       return
     }
-    alert("you haven't entered an input")
+    else if (!isValidDeadline.value) {
+      alert("invalid time format")
+      return
+    }
+    else {
+      alert("You haven't entered any 😠")
+    }
   }
   function toggleDone(todoItemsArray:todos[], todoItem:todos):void {
    todoItems.value =todoItemsArray.map((item) => {
@@ -49,16 +84,29 @@ type todos = {
   watch(todoItems,  () => { 
     localStorage.setItem('todos', JSON.stringify(todoItems.value))
   })
+  watch(todoDeadline, () => {
+    if (todoDeadline.value.search(/(^(1[0-2]|[0-9]):[0-5][0-9] ?(P|A)m$)|(^([0-2][0-3]|0?[1-9]):[0-5][0-9] ?$)/ig) !== -1 || todoDeadline.value === "") {
+      isValidDeadline.value = true
+    } else {
+      isValidDeadline.value = false
+    }
+  })
+  const message = "valid"
 </script>
 
 <template>
+  <h2>{{time}}</h2>
   <main>
-    <form @submit.prevent="addTodo">
-      <label for="text">Todo:</label><br>
-      <input type="text" v-model="todoInput" id="text"><br>
-      <label for="deadline">Due:</label><br>
-      <input type="text" id="deadline" v-model="todoDeadline">
-      <button type="submit">Submit</button>
+    <form @submit.prevent="addTodo" autocomplete="off">
+      <input type="text" v-model="todoInput" id="text" placeholder="Todo:">
+      <input type="text" id="deadline" v-model="todoDeadline" placeholder="Due:">
+      <template v-if="todoDeadline !== ''">
+        <label v-if="isValidDeadline">{{message}}</label>
+        <label v-else-if="!isValidDeadline">
+          invalid property value; the time format must be: HH:MM AM/PM (12-hour) or HH:MM (24-hour)
+        </label>
+      </template>
+      <button type="submit">&plus;</button>
     </form>
       <button @click="() => {todoItems = []}">clear Todos</button>
 
