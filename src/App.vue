@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { remove, stringifyStyle } from '@vue/shared';
 import { onMounted, ref, watch, type Ref } from 'vue';
 type todos = {
   deadline:string
@@ -139,8 +138,8 @@ type date = {
 </script>
 
 <template>
-  <h2>{{time}}</h2>
-  <main>
+  <main class="p-4">
+    <h2>{{time}}</h2>
     <form @submit.prevent="addTodo" autocomplete="off">
       <input type="text" v-model="todoInput" id="text" placeholder="Todo:">
       <input type="text" id="deadline" v-model="todoDeadline" placeholder="Due:">
@@ -155,10 +154,10 @@ type date = {
       <button @click="() => {todoItems = []}">clear Todos</button>
 
     <template v-if="todoItems.length !== 0">
-      <div>
+      <div class="m-2">
         <template v-for="todoItem in todoItems" :key="todoItem.id">
-          <div>
-            <p>{{todoItem.text}}</p><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "undo" : "mark as done"}}</button> <button @click="removeTodo(todoItems, todoItem)">Remove</button> <p v-if="pastDeadline(todoItem.deadline, currentTime().hour24)">Warning: past deadline</p>
+          <div class="py-4 px-2 flex">
+            <div class="bg-blue-600 flex-1">{{todoItem.text}}</div><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "undo" : "mark as done"}}</button> <button @click="removeTodo(todoItems, todoItem)">Remove</button> <p v-if="pastDeadline(todoItem.deadline, currentTime().hour24)">Warning: past deadline</p>
           </div>
         </template>
       </div>
