@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+input[type="text"] {
+  @apply p-3 focus:shadow-lg focus:border-blue-400 border-transparent border-[1px] outline-none shadow-gray-900;
+}
+h1 {
+  @apply text-3xl;
+}
+h2 {
+  @apply text-2xl;
+  font-weight:bold;
+}
