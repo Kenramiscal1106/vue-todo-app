@@ -1,7 +1,8 @@
 <script setup lang="ts">
-  import { onMounted, ref, watch, type Ref } from 'vue';
+  import { remove, stringifyStyle } from '@vue/shared';
+import { onMounted, ref, watch, type Ref } from 'vue';
 type todos = {
-  deadline?:string
+  deadline:string
   done:boolean
   id:number
   text:string
@@ -12,7 +13,7 @@ type date = {
   minute:number,
   seconds:number
 }
-  function currentTime():{[key:string]:date} {
+  function currentTime():{hour12:date, hour24:date} {
     const time = new Date();
     const hour12:date = {
       hour: (time.getHours() > 12 ? time.getHours() - 12 : time.getHours()),
@@ -71,7 +72,8 @@ type date = {
         return {
           id:item.id,
           done:!todoItem.done,
-          text:item.text
+          text:item.text,
+          deadline:item.deadline
         }
       }
       return item 
@@ -92,6 +94,48 @@ type date = {
     }
   })
   const message = "valid"
+  function pastDeadline(todoDeadline:string, currentTime:date):boolean {
+    if (todoDeadline === "") {
+      return false
+    }
+    function convertTo24HourFormat(todoDeadline:string):string {
+      const AMorPM = todoDeadline.match(/(A|P)/gi)?.join()
+      const removedAMPM = todoDeadline.replace(/(A|P)m$/gi, '');
+      const time = removedAMPM.match(/\d+/gi)
+      let hour, minute
+      if (time && typeof AMorPM !== 'undefined') {
+        hour = parseInt(time[0]);
+        minute = time[1]
+        hour = (AMorPM.toLowerCase() === 'p' ? hour + 12 : hour)
+      } else {
+        throw new Error('Parsing error')
+      }
+      return `${hour}:${minute}`
+    }
+    function decompose(todoDeadline:string):{hour:number, minute:number} {
+      let hour, minute;
+      const hourMinuteArray= todoDeadline.match(/\d+/gi)
+      if (hourMinuteArray) {
+        [hour, minute] = hourMinuteArray
+      }
+      if (typeof hour !== 'undefined' && typeof minute !== "undefined") {
+        return {
+          hour:parseInt(hour),
+          minute:parseInt(minute)
+        }
+      } 
+      return {
+        hour:NaN,
+        minute:NaN
+      }
+    }
+    const convertedFormat = (todoDeadline.search(/(A|P)m$/gi) !== -1 ? convertTo24HourFormat(todoDeadline) : todoDeadline)
+    const decomposeConvertedFormat = decompose(convertedFormat)
+    if (currentTime.hour >= decomposeConvertedFormat.hour && currentTime.minute >= decomposeConvertedFormat.minute) {
+      return true
+    }
+    return false
+  }
 </script>
 
 <template>
@@ -110,13 +154,15 @@ type date = {
     </form>
       <button @click="() => {todoItems = []}">clear Todos</button>
 
-    <div v-if="todoItems.length !== 0">
-      <div v-for="todoItem in todoItems" :key="todoItem.id">
-        <div>
-          <p>{{todoItem.text}}</p><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "undo" : "mark as done"}}</button> <button @click="removeTodo(todoItems, todoItem)">Remove</button>
-        </div>
+    <template v-if="todoItems.length !== 0">
+      <div>
+        <template v-for="todoItem in todoItems" :key="todoItem.id">
+          <div>
+            <p>{{todoItem.text}}</p><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "undo" : "mark as done"}}</button> <button @click="removeTodo(todoItems, todoItem)">Remove</button> <p v-if="pastDeadline(todoItem.deadline, currentTime().hour24)">Warning: past deadline</p>
+          </div>
+        </template>
       </div>
-    </div>
+    </template>
     <div v-else>
       <p>There are no todos</p>
     </div>
