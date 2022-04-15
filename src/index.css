@@ -2,9 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
+* {
+  @apply transition-all duration-150;
+}
 input[type="text"] {
-  @apply p-3 focus:shadow-lg focus:border-blue-400 border-transparent border-[1px] outline-none shadow-gray-900;
+  @apply p-3 focus:shadow-lg border-blue-400 border-[1px] outline-none focus:shadow-gray-400 rounded-[0.5rem];
+}
+button {
+  @apply p-3 border-blue-400 border-[1px] rounded-lg hover:shadow-gray-400 hover:shadow-md;
 }
 h1 {
   @apply text-3xl;
@@ -16,7 +21,7 @@ h2 {
 .todo-item {
   @apply py-4 px-2 flex gap-1;
 }
-.todo-item * {
+.todo-item > * {
   @apply py-2 px-4;
 }
 .todo-item > button {
@@ -26,5 +31,5 @@ h2 {
   @apply border-green-500 border-2 text-green-500 bg-green-100;
 }
 .undone {
-  @apply border-red-500 border-2 text-red-500 bg-red-100;
+  @apply border-red-500 border-2 text-red-500 bg-red-100 animate-ping;
 }
