@@ -31,5 +31,5 @@ h2 {
   @apply border-green-500 border-2 text-green-500 bg-green-100;
 }
 .undone {
-  @apply border-red-500 border-2 text-red-500 bg-red-100 animate-ping;
+  @apply border-red-500 border-2 text-red-500 bg-red-100;
 }
