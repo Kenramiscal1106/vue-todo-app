@@ -24,12 +24,27 @@ h2 {
 .todo-item > * {
   @apply py-2 px-4;
 }
-.todo-item > button {
-  @apply rounded-md hover:shadow-md shadow-gray-500;
-}
 .done {
   @apply border-green-500 border-2 text-green-500 bg-green-100;
 }
 .undone {
+  @apply border-red-500 border-2 text-red-500 bg-red-100;
+}
+.done, .undone, .past-deadline {
+  @apply flex flex-1 gap-3;
+}
+@keyframes pulsating {
+  from {
+    transform: rotateZ(0.5deg);
+    background: rgb(239 68 68);
+    color:white;
+  } to {
+    transform: rotateZ(0);
+    background:rgb(239 68 68 / 0.2);
+    color:white;
+  }
+}
+.past-deadline {
+  animation:pulsating .4s linear alternate infinite;
   @apply border-red-500 border-2 text-red-500 bg-red-100;
 }
