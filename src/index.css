@@ -13,3 +13,18 @@ h2 {
   @apply text-2xl;
   font-weight:bold;
 }
+.todo-item {
+  @apply py-4 px-2 flex gap-1;
+}
+.todo-item * {
+  @apply py-2 px-4;
+}
+.todo-item > button {
+  @apply rounded-md hover:shadow-md shadow-gray-500;
+}
+.done {
+  @apply border-green-500 border-2 text-green-500 bg-green-100;
+}
+.undone {
+  @apply border-red-500 border-2 text-red-500 bg-red-100;
+}
