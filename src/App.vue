@@ -86,7 +86,7 @@ type date = {
     localStorage.setItem('todos', JSON.stringify(todoItems.value))
   })
   watch(todoDeadline, () => {
-    if (todoDeadline.value.search(/(^(1[0-2]|[0-9]):[0-5][0-9] ?(P|A)m$)|(^([0-2][0-3]|0?[1-9]):[0-5][0-9] ?$)/ig) !== -1 || todoDeadline.value === "") {
+    if (todoDeadline.value.search(/(^(1[0-2]|0?[0-9]):[0-5][0-9] ?(P|A)m$)|(^([0-2][0-3]|0?[1-9]):[0-5][0-9] ?$)/ig) !== -1 || todoDeadline.value === "") {
       isValidDeadline.value = true
     } else {
       isValidDeadline.value = false
@@ -111,26 +111,29 @@ type date = {
       }
       return `${hour}:${minute}`
     }
-    function decompose(todoDeadline:string):{hour:number, minute:number} {
+    function decompose(todoDeadline:string):{hour:number, minute:number, totalMinutes:number} {
       let hour, minute;
       const hourMinuteArray= todoDeadline.match(/\d+/gi)
       if (hourMinuteArray) {
         [hour, minute] = hourMinuteArray
       }
       if (typeof hour !== 'undefined' && typeof minute !== "undefined") {
+        const totalMinutes = parseInt(hour) * 60 + parseInt(minute);
         return {
           hour:parseInt(hour),
-          minute:parseInt(minute)
+          minute:parseInt(minute),
+          totalMinutes
         }
       } 
       return {
         hour:NaN,
-        minute:NaN
+        minute:NaN,
+        totalMinutes:NaN
       }
     }
     const convertedFormat = (todoDeadline.search(/(A|P)m$/gi) !== -1 ? convertTo24HourFormat(todoDeadline) : todoDeadline)
     const decomposeConvertedFormat = decompose(convertedFormat)
-    if (currentTime.hour >= decomposeConvertedFormat.hour && currentTime.minute >= decomposeConvertedFormat.minute) {
+    if ((currentTime.hour * 60) + currentTime.minute >= decomposeConvertedFormat.totalMinutes) {
       return true
     }
     return false
@@ -156,8 +159,11 @@ type date = {
     <template v-if="todoItems.length !== 0">
       <div class="m-2">
         <template v-for="todoItem in todoItems" :key="todoItem.id">
-          <div class="py-4 px-2 flex">
-            <div class="bg-blue-600 flex-1">{{todoItem.text}}</div><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "undo" : "mark as done"}}</button> <button @click="removeTodo(todoItems, todoItem)">Remove</button> <p v-if="pastDeadline(todoItem.deadline, currentTime().hour24)">Warning: past deadline</p>
+          <div class="todo-item">
+            <div :class= "todoItem.done ? 'flex-1 done' : 'flex-1 undone' ">{{todoItem.text}} <span v-if="pastDeadline(todoItem.deadline, currentTime().hour24) && !todoItem.done" class="text-red-600">Past due date</span></div><div v-if="todoItem.deadline !== ''">
+            <audio>
+              <source src="./assets/mixkit-facility-alarm-908.wav" type="audio/wav"/>
+            </audio>Due: {{todoItem.deadline}}</div><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "❌" : "✅"}}</button> <button @click="removeTodo(todoItems, todoItem)">❌</button>
           </div>
         </template>
       </div>
