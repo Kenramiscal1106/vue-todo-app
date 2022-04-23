@@ -1,26 +1,26 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, type Ref } from 'vue';
-type todos = {
+type Todos = {
   deadline:string
   done:boolean
   id:number
   text:string
 }
-type date = {
+type Date = {
   timeString:string;
   hour:number,
   minute:number,
   seconds:number
 }
-  function currentTime():{hour12:date, hour24:date} {
+  function currentTime():{hour12:Date, hour24:Date} {
     const time = new Date();
-    const hour12:date = {
+    const hour12:Date = {
       hour: (time.getHours() > 12 ? time.getHours() - 12 : time.getHours()),
       minute:time.getMinutes(),
       seconds:time.getSeconds(),
       timeString:`${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()}`
     }
-    const hour24:date = {
+    const hour24:Date = {
       hour: time.getHours(),
       minute:time.getMinutes(),
       seconds:time.getSeconds(),
@@ -35,7 +35,7 @@ type date = {
   setInterval(async () => {
     time.value = currentTime().hour12.timeString
   }, 1000)
-  const todoItems:Ref<todos[]> = ref([])
+  const todoItems:Ref<Todos[]> = ref([])
   onMounted(() => {
     const todoLocalStorage:string | null = localStorage.getItem('todos');
     if (todoLocalStorage) {
@@ -45,6 +45,26 @@ type date = {
   const isValidDeadline:Ref<boolean> = ref(true);
   const todoInput:Ref<string> = ref("")
   const todoDeadline:Ref<string> = ref("")
+  const markAllAsUndone = (todoItems: Todos[]) => {
+    return todoItems.map((todo:Todos) => {
+      return {
+        text:todo.text,
+        deadline:todo.deadline,
+        done:false,
+        id:todo.id
+      }
+    })
+  }
+  const markAllAsDone = (todoItems: Todos[]):Todos[] => {
+    return todoItems.map((todo:Todos) => {
+      return {
+        text:todo.text,
+        deadline:todo.deadline,
+        done:true,
+        id:todo.id
+      }
+    })
+  }
   function addTodo() {
     if (todoInput.value != "" && isValidDeadline.value) {
       todoItems.value = [...todoItems.value, {
@@ -65,7 +85,7 @@ type date = {
       alert("You haven't entered any 😠")
     }
   }
-  function toggleDone(todoItemsArray:todos[], todoItem:todos):void {
+  function toggleDone(todoItemsArray:Todos[], todoItem:Todos):void {
    todoItems.value =todoItemsArray.map((item) => {
       if (item.id === todoItem.id) {
         return {
@@ -79,7 +99,7 @@ type date = {
     })
     todoItems.value = todoItems.value
   }
-  function removeTodo(todoItemsArray:todos[], todoItem:todos):void {
+  function removeTodo(todoItemsArray:Todos[], todoItem:Todos):void {
     todoItems.value = todoItemsArray.filter((item) => item.id !== todoItem.id)
   }
   watch(todoItems,  () => { 
@@ -93,7 +113,7 @@ type date = {
     }
   })
   const message = "valid"
-  function pastDeadline(todoDeadline:string, currentTime:date):boolean {
+  function pastDeadline(todoDeadline:string, currentTime:Date):boolean {
     if (todoDeadline === "") {
       return false
     }
@@ -155,26 +175,40 @@ type date = {
         </label>
       </template>
     </form>
+      <button @click="() => {todoItems = markAllAsUndone(todoItems)}">Mark all as undone</button>
+      <button @click="() => {todoItems = markAllAsDone(todoItems)}">Mark all as Done</button>
       <button @click="() => {todoItems = []}">clear Todos</button>
-
-    <template v-if="todoItems.length !== 0">
-      <div class="m-2 max-w-[960px]">
+    <!-- <template v-if="todoItems.length !== 0">
+      <div class="m-2 max-w-[960px] gap-1 flex flex-col">
         <template v-for="todoItem in todoItems" :key="todoItem.id">
           <div class="todo-item">
             <div :class= "todoItem.done ? 'done' : (!pastDeadline(todoItem.deadline, currentTime().hour24) ? 'undone' : 'past-deadline') ">{{todoItem.text}} <span v-if="pastDeadline(todoItem.deadline, currentTime().hour24) && !todoItem.done" class="text-red-600 flex items-center ml-auto"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
   <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
   <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
-</svg> Past due date<audio autoplay loop>
+</svg> Past due Date<audio autoplay loop>
               <source src="./assets/mixkit-facility-alarm-908.wav" type="audio/wav"/>
-            </audio></span></div><div v-if="todoItem.deadline !== ''">
-            Due: {{todoItem.deadline}}</div><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "❌" : "✅"}}</button> <button @click="removeTodo(todoItems, todoItem)">❌</button>
+            </audio></span><div v-if="todoItem.deadline !== ''" :class="!pastDeadline(todoItem.deadline, currentTime().hour24) || todoItem.done ? 'ml-auto' : ''">
+            Due: {{todoItem.deadline}}</div></div><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "❌" : "✅"}}</button> <button @click="removeTodo(todoItems, todoItem)">❌</button>
           </div>
         </template>
       </div>
     </template>
     <div v-else>
       <p>There are no todos</p>
-    </div>
+    </div> -->
+    <template v-if="todoItems.length !== 0">
+      <div class="m-2 max-w-[960px] gap-1 flex flex-col">
+        <template v-for="todoItem in todoItems">
+          <div class="todo-item">
+            <button :class="`flex-1 text-left mark-as-done-button ${todoItem.done ? 'todo-is-done ' : ''}`" @click="toggleDone(todoItems, todoItem)">
+              {{todoItem.done ? "✅" : ""}} {{todoItem.text}} 
+            </button>
+            <button @click="removeTodo(todoItems, todoItem)">&times;</button>
+          </div>
+
+        </template>
+      </div>
+    </template>
   </main>
 </template>
 
