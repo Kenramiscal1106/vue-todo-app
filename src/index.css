@@ -2,14 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  @apply min-w-full min-h-[100vh];
+}
+body {
+  @apply bg-gray-700;
+  color:white;
+}
 * {
   @apply transition-all duration-150;
 }
 input[type="text"] {
-  @apply p-3 focus:shadow-lg border-blue-400 border-[1px] outline-none focus:shadow-gray-400 rounded-[0.5rem];
+  @apply p-3 focus:shadow-lg border-blue-400 border-[1px] outline-none focus:shadow-gray-700 rounded-[0.5rem] bg-transparent;
 }
 button {
-  @apply p-3 border-blue-400 border-[1px] rounded-lg hover:shadow-gray-400 hover:shadow-md;
+  @apply p-3 border-blue-400 border-[1px] rounded-lg ;
 }
 h1 {
   @apply text-3xl;
@@ -19,32 +26,34 @@ h2 {
   font-weight:bold;
 }
 .todo-item {
-  @apply py-4 px-2 flex gap-1;
+  @apply flex gap-1;
 }
 .todo-item > * {
-  @apply py-2 px-4;
-}
-.done {
-  @apply border-green-500 border-2 text-green-500 bg-green-100;
-}
-.undone {
-  @apply border-red-500 border-2 text-red-500 bg-red-100;
+  @apply py-2 px-4 bg-opacity-30 bg-white rounded-lg;
 }
 .done, .undone, .past-deadline {
-  @apply flex flex-1 gap-3;
+  @apply flex flex-1 gap-3 border-[1px] border-white border-opacity-10 text-slate-800;
 }
-@keyframes pulsating {
+/* @keyframes pulsating {
   from {
-    transform: rotateZ(0.5deg);
+    transform:scale(1.1);
     background: rgb(239 68 68);
     color:white;
   } to {
-    transform: rotateZ(0);
     background:rgb(239 68 68 / 0.2);
-    color:white;
+    color:red;
   }
-}
-.past-deadline {
+} */
+/* .past-deadline {
   animation:pulsating .4s linear alternate infinite;
-  @apply border-red-500 border-2 text-red-500 bg-red-100;
+  @apply border-red-500 border-2 text-red-500;
+} */
+.mark-as-done-button {
+  @apply text-black transition-colors shadow-md shadow-gray-400 duration-100 transition-transform;
+}
+.mark-as-done-button:hover:not(.todo-is-done) {
+  @apply bg-blue-100 shadow-lg shadow-gray-400 translate-y-[-4px];
+}
+.todo-is-done {
+  @apply bg-blue-300;
 }
