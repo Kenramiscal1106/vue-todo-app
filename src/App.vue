@@ -7,10 +7,11 @@ type Todos = {
   text:string
 }
 type Date = {
-  timeString:string;
+  timeString:Function ;
   hour:number,
   minute:number,
-  seconds:number
+  seconds:number,
+  twelveHourSplit?:Function
 }
   function currentTime():{hour12:Date, hour24:Date} {
     const time = new Date();
@@ -18,22 +19,29 @@ type Date = {
       hour: (time.getHours() > 12 ? time.getHours() - 12 : time.getHours()),
       minute:time.getMinutes(),
       seconds:time.getSeconds(),
-      timeString:`${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()}`
+      twelveHourSplit:function() {
+        return (this.hour > 12 ? "PM" : "AM")
+      },
+      timeString:function() {
+        return `${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()} ${typeof this.twelveHourSplit !== "undefined" ? this.twelveHourSplit() : ""}`
+      }
     }
     const hour24:Date = {
       hour: time.getHours(),
       minute:time.getMinutes(),
       seconds:time.getSeconds(),
-      timeString:`${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()}`
+      timeString:function() {
+        return `${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()}`
+      }
     }
     return {
       hour12,
       hour24
     }
   }
-  const time:Ref<string> = ref(currentTime().hour12.timeString);
+  const time:Ref<string> = ref(currentTime().hour12.timeString());
   setInterval(async () => {
-    time.value = currentTime().hour12.timeString
+    time.value = currentTime().hour12.timeString()
   }, 1000)
   const todoItems:Ref<Todos[]> = ref([])
   onMounted(() => {
@@ -125,7 +133,7 @@ type Date = {
       if (time && typeof AMorPM !== 'undefined') {
         hour = parseInt(time[0]);
         minute = time[1]
-        hour = (AMorPM.toLowerCase() === 'p' ? hour + 12 : hour)
+        hour = (AMorPM.toLowerCase() === 'p' && hour !== 12 ? hour + 12 : hour)
       } else {
         throw new Error('Parsing error')
       }
@@ -198,13 +206,31 @@ type Date = {
     </div> -->
     <template v-if="todoItems.length !== 0">
       <div class="m-2 max-w-[960px] gap-1 flex flex-col">
-        <template v-for="todoItem in todoItems">
-          <div class="todo-item">
-            <button :class="`flex-1 text-left mark-as-done-button ${todoItem.done ? 'todo-is-done ' : ''}`" @click="toggleDone(todoItems, todoItem)">
-              {{todoItem.done ? "✅" : ""}} {{todoItem.text}} 
+        <template v-for="todoItem in todoItems" :key="todoItem.id">
+            <button :class="`flex-1 text-left mark-as-done-button todo-item ${todoItem.done ? 'todo-is-done ' : ''}`" @click="toggleDone(todoItems, todoItem)">
+              <input type="checkbox" name="" id="" v-model="todoItem.done">{{todoItem.text}} 
+              <div class="todo-item-side">
+                <span v-if="pastDeadline(todoItem.deadline, currentTime().hour24) && !todoItem.done" class="text-red-600 flex items-center ml-auto"><img src="./assets/alarm.svg" alt=""> 
+                  Past due Date
+                  <audio autoplay loop><source src="./assets/mixkit-facility-alarm-908.wav" type="audio/wav"/></audio>
+                </span>
+                <span v-if="todoItem.deadline !== ''">Deadline: {{todoItem.deadline}}</span>
+                <span class="option-buttons">
+                  <button @click="removeTodo(todoItems, todoItem)" class="remove-button">
+                    <svg width="14" height="14" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M33.2306 33.2306L3.76933 3.76936M3.76933 33.2306L33.2306 3.76936" stroke="currentColor" stroke-width="7"/>
+    </svg>
+                  </button>
+                  <button>
+                    <svg width="14" height="14" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="7.5" cy="18.5" r="4.5" fill="currentColor"/>
+                      <circle cx="18.5" cy="18.5" r="4.5" fill="currentColor"/>
+                      <circle cx="29.5" cy="18.5" r="4.5" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </span>
+            </div>
             </button>
-            <button @click="removeTodo(todoItems, todoItem)">&times;</button>
-          </div>
 
         </template>
       </div>
