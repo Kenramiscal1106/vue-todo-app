@@ -13,10 +13,15 @@ body {
   @apply transition-all duration-150;
 }
 input[type="text"] {
-  @apply p-3 focus:shadow-lg border-blue-400 border-[1px] outline-none focus:shadow-gray-700 rounded-[0.5rem] bg-transparent;
+  @apply p-2 border-blue-400 border-[1px] outline-none rounded-[0.5rem] bg-transparent;
+}
+@supports (-webkit-appearance: none) or (-moz-appearance: none) {
+  input[type="checkbox"] {
+    @apply border-2 p-3;
+  }
 }
 button {
-  @apply p-3 border-blue-400 border-[1px] rounded-lg ;
+  @apply p-1.5 border-blue-400 border-[1px] rounded-lg ;
 }
 h1 {
   @apply text-3xl;
@@ -28,8 +33,11 @@ h2 {
 .todo-item {
   @apply flex gap-1;
 }
-.todo-item > * {
-  @apply py-2 px-4 bg-opacity-30 bg-white rounded-lg;
+.todo-item {
+  @apply py-2 px-4 bg-opacity-30 bg-white rounded-md flex items-center;
+}
+.todo-item .todo-item-side {
+  @apply ml-auto flex items-center gap-2;
 }
 .done, .undone, .past-deadline {
   @apply flex flex-1 gap-3 border-[1px] border-white border-opacity-10 text-slate-800;
@@ -49,11 +57,21 @@ h2 {
   @apply border-red-500 border-2 text-red-500;
 } */
 .mark-as-done-button {
-  @apply text-black transition-colors shadow-md shadow-gray-400 duration-100 transition-transform;
+  @apply text-black duration-100 transition-transform transition-colors;
 }
 .mark-as-done-button:hover:not(.todo-is-done) {
-  @apply bg-blue-100 shadow-lg shadow-gray-400 translate-y-[-4px];
+  @apply bg-blue-100;
 }
 .todo-is-done {
   @apply bg-blue-300;
+}
+.option-buttons {
+  opacity:0;
+}
+.option-buttons > .remove-button {
+  background:red;
+  color:white;
+}
+.todo-item:hover .option-buttons {
+  opacity:1;
 }
