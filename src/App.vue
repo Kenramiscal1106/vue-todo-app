@@ -20,7 +20,7 @@ type Date = {
       minute:time.getMinutes(),
       seconds:time.getSeconds(),
       twelveHourSplit:function() {
-        return (this.hour > 12 ? "PM" : "AM")
+        return (time.getHours() > 12 ? "PM" : "AM")
       },
       timeString:function() {
         return `${(time.getHours() > 12 ? time.getHours() - 12 : time.getHours())}:${time.getMinutes()}:${time.getSeconds()} ${typeof this.twelveHourSplit !== "undefined" ? this.twelveHourSplit() : ""}`
