@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, type Ref } from 'vue';
-type Todos = {
+import { onMounted, reactive, ref, watch, type Ref } from 'vue';
+import TodoItems from './components/TodoItems.vue'
+type Todo = {
   deadline:string
   done:boolean
   id:number
@@ -43,7 +44,7 @@ type Date = {
   setInterval(async () => {
     time.value = currentTime().hour12.timeString()
   }, 1000)
-  const todoItems:Ref<Todos[]> = ref([])
+  const todoItems = reactive<{value:Todo[]}>({value:[]})
   onMounted(() => {
     const todoLocalStorage:string | null = localStorage.getItem('todos');
     if (todoLocalStorage) {
@@ -53,8 +54,8 @@ type Date = {
   const isValidDeadline:Ref<boolean> = ref(true);
   const todoInput:Ref<string> = ref("")
   const todoDeadline:Ref<string> = ref("")
-  const markAllAsUndone = (todoItems: Todos[]) => {
-    return todoItems.map((todo:Todos) => {
+  const markAllAsUndone = (todoItems: {value:Todo[]}) => {
+    return todoItems.value.map((todo:Todo) => {
       return {
         text:todo.text,
         deadline:todo.deadline,
@@ -63,8 +64,8 @@ type Date = {
       }
     })
   }
-  const markAllAsDone = (todoItems: Todos[]):Todos[] => {
-    return todoItems.map((todo:Todos) => {
+  const markAllAsDone = (todoItems: {value: Todo[]}):Todo[] => {
+    return todoItems.value.map((todo:Todo) => {
       return {
         text:todo.text,
         deadline:todo.deadline,
@@ -93,7 +94,7 @@ type Date = {
       alert("You haven't entered any 😠")
     }
   }
-  function toggleDone(todoItemsArray:Todos[], todoItem:Todos):void {
+  function toggleDone(todoItemsArray:Todo[], todoItem:Todo):void {
    todoItems.value =todoItemsArray.map((item) => {
       if (item.id === todoItem.id) {
         return {
@@ -105,9 +106,8 @@ type Date = {
       }
       return item 
     })
-    todoItems.value = todoItems.value
   }
-  function removeTodo(todoItemsArray:Todos[], todoItem:Todos):void {
+  function removeTodo(todoItemsArray:Todo[], todoItem:Todo):void {
     todoItems.value = todoItemsArray.filter((item) => item.id !== todoItem.id)
   }
   watch(todoItems,  () => { 
@@ -183,31 +183,14 @@ type Date = {
         </label>
       </template>
     </form>
-      <button @click="() => {todoItems = markAllAsUndone(todoItems)}">Mark all as undone</button>
-      <button @click="() => {todoItems = markAllAsDone(todoItems)}">Mark all as Done</button>
-      <button @click="() => {todoItems = []}">clear Todos</button>
-    <!-- <template v-if="todoItems.length !== 0">
+      <button @click="() => {todoItems.value = markAllAsUndone(todoItems)}">Mark all as undone</button>
+      <button @click="() => {todoItems.value = markAllAsDone(todoItems)}">Mark all as Done</button>
+      <button @click="() => {todoItems.value = []}">clear Todo</button>
+    <template v-if="todoItems.value.length !== 0">
       <div class="m-2 max-w-[960px] gap-1 flex flex-col">
-        <template v-for="todoItem in todoItems" :key="todoItem.id">
-          <div class="todo-item">
-            <div :class= "todoItem.done ? 'done' : (!pastDeadline(todoItem.deadline, currentTime().hour24) ? 'undone' : 'past-deadline') ">{{todoItem.text}} <span v-if="pastDeadline(todoItem.deadline, currentTime().hour24) && !todoItem.done" class="text-red-600 flex items-center ml-auto"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
-  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
-  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
-</svg> Past due Date<audio autoplay loop>
-              <source src="./assets/mixkit-facility-alarm-908.wav" type="audio/wav"/>
-            </audio></span><div v-if="todoItem.deadline !== ''" :class="!pastDeadline(todoItem.deadline, currentTime().hour24) || todoItem.done ? 'ml-auto' : ''">
-            Due: {{todoItem.deadline}}</div></div><button @click="() => {toggleDone(todoItems, todoItem)}">{{todoItem.done ? "❌" : "✅"}}</button> <button @click="removeTodo(todoItems, todoItem)">❌</button>
-          </div>
-        </template>
-      </div>
-    </template>
-    <div v-else>
-      <p>There are no todos</p>
-    </div> -->
-    <template v-if="todoItems.length !== 0">
-      <div class="m-2 max-w-[960px] gap-1 flex flex-col">
-        <template v-for="todoItem in todoItems" :key="todoItem.id">
-            <button :class="`flex-1 text-left mark-as-done-button todo-item ${todoItem.done ? 'todo-is-done ' : ''}`" @click="toggleDone(todoItems, todoItem)">
+        <template v-for="todoItem in todoItems.value" :key="todoItem.id">
+          <TodoItems v-model:todos="todoItems" :specific-todo-item="todoItem"/>
+            <button :class="`flex-1 text-left mark-as-done-button todo-item ${todoItem.done ? 'todo-is-done ' : ''}`" @click="toggleDone(todoItems.value, todoItem)">
               <input type="checkbox" name="" id="" v-model="todoItem.done">{{todoItem.text}} 
               <div class="todo-item-side">
                 <span v-if="pastDeadline(todoItem.deadline, currentTime().hour24) && !todoItem.done" class="text-red-600 flex items-center ml-auto"><img src="./assets/alarm.svg" alt=""> 
@@ -216,7 +199,7 @@ type Date = {
                 </span>
                 <span v-if="todoItem.deadline !== ''">Deadline: {{todoItem.deadline}}</span>
                 <span class="option-buttons">
-                  <button @click="removeTodo(todoItems, todoItem)" class="remove-button">
+                  <button @click="removeTodo(todoItems.value, todoItem)" class="remove-button">
                     <svg width="14" height="14" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M33.2306 33.2306L3.76933 3.76936M3.76933 33.2306L33.2306 3.76936" stroke="currentColor" stroke-width="7"/>
     </svg>
@@ -225,7 +208,7 @@ type Date = {
                     <svg width="14" height="14" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <circle cx="7.5" cy="18.5" r="4.5" fill="currentColor"/>
                       <circle cx="18.5" cy="18.5" r="4.5" fill="currentColor"/>
-                      <circle cx="29.5" cy="18.5" r="4.5" fill="currentColor"/>
+                      <circle cx="29.5" cy="18.5" r="4.5" fill="currentColor"/> 
                     </svg>
                   </button>
                 </span>
