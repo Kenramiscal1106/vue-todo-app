@@ -101,7 +101,7 @@ function removeTodo(todoItemsArray: Todo[], todoItem: Todo): void {
   <button
     :class="`flex-1 text-left mark-as-done-button todo-item ${
       specificTodoItem.done ? 'todo-is-done ' : ''
-    }`"
+    } ${pastDeadline(specificTodoItem.deadline, currentTimeRef) && !specificTodoItem.done ? 'deadline' : ''}`"
     @click="toggleDone(todos.value, specificTodoItem)"
   >
     <input type="checkbox" name="" id="" v-model="specificTodoItem.done" />{{
