@@ -1,3 +1,8 @@
+:root {
+  --duration:.5s;
+  --offset:0;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,8 +11,7 @@ html, body {
   @apply min-w-full min-h-[100vh];
 }
 body {
-  @apply bg-gray-700;
-  color:white;
+  @apply bg-white;
 }
 * {
   @apply transition-all duration-150;
@@ -34,7 +38,7 @@ h2 {
   @apply flex gap-1;
 }
 .todo-item {
-  @apply py-2 px-4 bg-opacity-30 bg-white rounded-md flex items-center;
+  @apply py-2 px-4 text-white rounded-md flex items-center bg-[#1B469D];
 }
 .todo-item .todo-item-side {
   @apply ml-auto flex items-center gap-2;
@@ -57,13 +61,30 @@ h2 {
   @apply border-red-500 border-2 text-red-500;
 } */
 .mark-as-done-button {
-  @apply text-black duration-100 transition-transform transition-colors;
+  @apply duration-100 transition-transform transition-colors;
+  animation:undone var(--duration) linear;
 }
-.mark-as-done-button:hover:not(.todo-is-done) {
-  @apply bg-blue-100;
+@keyframes done {
+  10% {
+    @apply bg-green-300;
+  }
+}
+@keyframes undone {
+  10% {
+    @apply bg-red-400;
+  }
+}
+@keyframes pulsating-deadline {
+  50% {
+    @apply bg-red-400;
+  }
 }
 .todo-is-done {
-  @apply bg-blue-300;
+  @apply text-white;
+  animation:done var(--duration) linear;
+}
+.deadline {
+  animation:pulsating-deadline calc(var(--duration)) linear infinite;
 }
 .option-buttons {
   opacity:0;
