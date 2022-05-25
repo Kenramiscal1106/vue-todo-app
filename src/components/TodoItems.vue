@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import {pastDeadline, type Date} from "../lib/utils"
 
 interface Props {
   todos: { value: Todo[] };
   specificTodoItem: Todo;
-  currentTimeRef:Date
+  currentTimeRef:any
 }
-type Date = {
-  timeString: Function;
-  hour: number;
-  minute: number;
-  seconds: number;
-  twelveHourSplit?: Function;
-};
 type Todo = {
   deadline: string;
   done: boolean;
@@ -33,65 +27,6 @@ function toggleDone(todoItemsArray: Todo[], todoItem: Todo): void {
     return item;
   });
 }
-function pastDeadline(todoDeadline: string, currentTime: Date): boolean {
-  if (todoDeadline === "") {
-    return false;
-  }
-  function convertTo24HourFormat(todoDeadline: string): string {
-    const AMorPM = todoDeadline.match(/(A|P)/gi)?.join();
-    const removedAMPM = todoDeadline.replace(/(A|P)m$/gi, "");
-    const time = removedAMPM.match(/\d+/gi);
-    let hour, minute;
-    if (time && typeof AMorPM !== "undefined") {
-      hour = parseInt(time[0]);
-      minute = time[1];
-      if(AMorPM.toLowerCase() === "p" && hour < 12) {
-        hour += 12
-      } else if (AMorPM.toLowerCase() === "a" && hour === 12 ) {
-        hour = 0;
-      }
-    } else {
-      throw new Error("Parsing error");
-    }
-    return `${hour}:${minute}`;
-  }
-  function decompose(todoDeadline: string): {
-    hour: number;
-    minute: number;
-    totalMinutes: number;
-  } {
-    let hour, minute;
-    const hourMinuteArray = todoDeadline.match(/\d+/gi);
-    if (hourMinuteArray) {
-      [hour, minute] = hourMinuteArray;
-    }
-    if (typeof hour !== "undefined" && typeof minute !== "undefined") {
-      const totalMinutes = parseInt(hour) * 60 + parseInt(minute);
-      return {
-        hour: parseInt(hour),
-        minute: parseInt(minute),
-        totalMinutes,
-      };
-    }
-    return {
-      hour: NaN,
-      minute: NaN,
-      totalMinutes: NaN,
-    };
-  }
-  const convertedFormat =
-    todoDeadline.search(/(A|P)m$/gi) !== -1
-      ? convertTo24HourFormat(todoDeadline)
-      : todoDeadline;
-  const decomposeConvertedFormat = decompose(convertedFormat);
-  if (
-    currentTime.hour * 60 + currentTime.minute >=
-    decomposeConvertedFormat.totalMinutes
-  ) {
-    return true;
-  }
-  return false;
-}
 function removeTodo(todoItemsArray: Todo[], todoItem: Todo): void {
   props.todos.value = todoItemsArray.filter((item) => item.id !== todoItem.id);
 }
@@ -108,18 +43,6 @@ function removeTodo(todoItemsArray: Todo[], todoItem: Todo): void {
       specificTodoItem.text
     }}
     <div class="todo-item-side">
-      <span
-        v-if="pastDeadline(specificTodoItem.deadline, currentTimeRef) && !specificTodoItem.done"
-        class="text-red-600 flex items-center ml-auto"
-        ><img src="./../assets/alarm.svg" alt="" />
-        Past due Date
-        <audio autoplay loop>
-          <source
-            src="./../assets/mixkit-facility-alarm-908.wav"
-            type="audio/wav"
-          />
-        </audio>
-      </span>
       <span v-if="specificTodoItem.deadline !== ''"
         >Deadline: {{ specificTodoItem.deadline }}</span
       >
