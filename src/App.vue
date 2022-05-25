@@ -2,22 +2,24 @@
   import { onMounted, reactive, ref, watch, type Ref } from 'vue';
   import TodoItems from './components/TodoItems.vue'
   import * as utils from "./lib/utils"
-  const currentTimeObj:Ref<utils.Date> = ref(utils.currentTime().hour24);;
+  const currentTimeObj:Ref<utils.Date> = ref(utils.currentTime().hour24);
   const time:Ref<string> = ref(utils.currentTime().hour12.timeString());
+  const todoItems = reactive<{value:utils.Todo[]}>({value:[]})
+  const isValidDeadline:Ref<boolean> = ref(true);
+  const todoInput:Ref<string> = ref("")
+  const todoDeadline:Ref<string> = ref("");
+  const thereIsDeadline = ref<0 | 1>(0);
+  const DeadlinePattern = /(^(1[0-2]|0?[0-9]):[0-5][0-9] ?(P|A)m$)|(^([0-2][0-3]|0?[1-9]):[0-5][0-9] ?$)/ig;
   setInterval(async () => {
     time.value = utils.currentTime().hour12.timeString()
     currentTimeObj.value = utils.currentTime().hour24
-  }, 1000)
-  const todoItems = reactive<{value:utils.Todo[]}>({value:[]})
+  }, 200)
   onMounted(() => {
     const todoLocalStorage:string | null = localStorage.getItem('todos');
     if (todoLocalStorage) {
       todoItems.value = JSON.parse(todoLocalStorage)
     }
   })
-  const isValidDeadline:Ref<boolean> = ref(true);
-  const todoInput:Ref<string> = ref("")
-  const todoDeadline:Ref<string> = ref("")
   function addTodo() {
     if (todoInput.value != "" && isValidDeadline.value) {
       todoItems.value = [...todoItems.value, {
@@ -41,7 +43,6 @@
   watch(todoItems,  () => { 
     localStorage.setItem('todos', JSON.stringify(todoItems.value))
   })
-  const DeadlinePattern = /(^(1[0-2]|0?[0-9]):[0-5][0-9] ?(P|A)m$)|(^([0-2][0-3]|0?[1-9]):[0-5][0-9] ?$)/ig;
   watch(todoDeadline, () => {
     if (todoDeadline.value.search(DeadlinePattern) !== -1 || todoDeadline.value === "") {
       isValidDeadline.value = true
@@ -49,23 +50,28 @@
       isValidDeadline.value = false
     }
   })
+  watch([todoItems.value, currentTimeObj], () => {
+    const sumOfDeadline = todoItems.value.map((todoItem) =>{
+      const todoItemInt = utils.pastDeadline(todoItem.deadline, currentTimeObj.value) && !todoItem.done
+      if (todoItemInt) {
+        return 1
+      }
+      return 0
+    })
+    thereIsDeadline.value = sumOfDeadline.reduce((prev, next) => prev + next)
+  })
 </script>
 
 <template>
   <main class="p-4">
     <h2>{{time}}</h2>
-    <!-- <span
-        v-if="thereIsADeadline"
-        class="text-red-600 flex items-center ml-auto"
-        ><img src="./../assets/alarm.svg" alt="" />
-        Past due Date
+    <div>
+      <span v-if="thereIsDeadline">
         <audio autoplay loop>
-          <source
-            src="./assets/mixkit-facility-alarm-908.wav"
-            type="audio/wav"
-          />
+          <source src="./assets/mixkit-facility-alarm-908.wav" type="audio/wav">
         </audio>
-      </span> -->
+      </span>
+    </div>
     <form @submit.prevent="addTodo" autocomplete="off">
       <input type="text" v-model="todoInput" id="text" placeholder="Todo:">
       <input type="text" id="deadline" v-model="todoDeadline" placeholder="Due:">
