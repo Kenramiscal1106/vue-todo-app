@@ -46,20 +46,6 @@ h2 {
 .done, .undone, .past-deadline {
   @apply flex flex-1 gap-3 border-[1px] border-white border-opacity-10 text-slate-800;
 }
-/* @keyframes pulsating {
-  from {
-    transform:scale(1.1);
-    background: rgb(239 68 68);
-    color:white;
-  } to {
-    background:rgb(239 68 68 / 0.2);
-    color:red;
-  }
-} */
-/* .past-deadline {
-  animation:pulsating .4s linear alternate infinite;
-  @apply border-red-500 border-2 text-red-500;
-} */
 .mark-as-done-button {
   @apply duration-100 transition-transform transition-colors;
   animation:undone var(--duration) linear;
