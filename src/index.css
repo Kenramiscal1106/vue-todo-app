@@ -11,21 +11,16 @@ html, body {
   @apply min-w-full min-h-[100vh];
 }
 body {
-  @apply bg-white;
+  @apply bg-gray-100;
 }
 * {
   @apply transition-all duration-150;
 }
 input[type="text"] {
-  @apply p-2 border-blue-400 border-[1px] outline-none rounded-[0.5rem] bg-transparent;
+  @apply p-2 bg-white outline-none rounded-[0.5rem] mx-2;
 }
-@supports (-webkit-appearance: none) or (-moz-appearance: none) {
-  input[type="checkbox"] {
-    @apply border-2 p-3;
-  }
-}
-button {
-  @apply p-1.5 border-blue-400 border-[1px] rounded-lg ;
+button, input[type="button"], [type="submit"] {
+  @apply p-1.5 bg-white rounded-lg ;
 }
 h1 {
   @apply text-3xl;
@@ -38,7 +33,7 @@ h2 {
   @apply flex gap-1;
 }
 .todo-item {
-  @apply py-2 px-4 text-white rounded-md flex items-center bg-[#1B469D];
+  @apply py-2 px-4 rounded-md flex items-center bg-white;
 }
 .todo-item .todo-item-side {
   @apply ml-auto flex items-center gap-2;
@@ -66,7 +61,6 @@ h2 {
   }
 }
 .todo-is-done {
-  @apply text-white;
   animation:done var(--duration) linear;
 }
 .deadline {
