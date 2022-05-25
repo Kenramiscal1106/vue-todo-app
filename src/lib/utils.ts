@@ -22,8 +22,6 @@ export function pastDeadline(todoDeadline: string, currentTime: Date): boolean {
       } else if (AMorPM.toLowerCase() === "a" && hour === 12) {
         hour = 0;
       }
-    } else {
-      throw new Error("Parsing error");
     }
     return `${hour}:${minute}`;
   }
