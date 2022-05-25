@@ -8,7 +8,7 @@
   const isValidDeadline:Ref<boolean> = ref(true);
   const todoInput:Ref<string> = ref("")
   const todoDeadline:Ref<string> = ref("");
-  const thereIsDeadline = ref<0 | 1>(0);
+  const thereIsDeadline = ref<number>(0);
   const DeadlinePattern = /(^(1[0-2]|0?[0-9]):[0-5][0-9] ?(P|A)m$)|(^([0-2][0-3]|0?[1-9]):[0-5][0-9] ?$)/ig;
   setInterval(async () => {
     time.value = utils.currentTime().hour12.timeString()
@@ -65,8 +65,9 @@
 <template>
   <main class="p-4">
     <h2>{{time}}</h2>
-    <div>
-      <span v-if="thereIsDeadline">
+    <div :class="'fixed top-1 left-[50%] -translate-x-[50%] bg-red-600 text-white px-4 py-2 rounded-md transition-opacity duration-300 ' + (thereIsDeadline === 0 ? ' opacity-0' : '') ">
+      <h3>Warning: there are some todos that are past deadline</h3>
+      <span v-if="thereIsDeadline > 0">
         <audio autoplay loop>
           <source src="./assets/mixkit-facility-alarm-908.wav" type="audio/wav">
         </audio>
