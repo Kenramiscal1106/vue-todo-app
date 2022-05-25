@@ -58,7 +58,9 @@
       }
       return 0
     })
-    thereIsDeadline.value = sumOfDeadline.reduce((prev, next) => prev + next)
+    thereIsDeadline.value = sumOfDeadline.reduce((prev, next, i, arr):any => {
+      return prev + next
+    })
   })
 </script>
 
