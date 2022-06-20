@@ -45,7 +45,7 @@ function removeTodo(todoItemsArray: Todo[], todoItem: Todo): void {
       }`"
       @click="toggleDone(todos.value, specificTodoItem)"
     >
-      <input type="checkbox" name="" id="" v-model="specificTodoItem.done" />{{
+      <input type="checkbox" name="" id="" v-model="specificTodoItem.done" class="bg-red-600 checked:bg-green-600"/>{{
         specificTodoItem.text
       }}
       <div class="todo-text-side">
@@ -91,24 +91,24 @@ function removeTodo(todoItemsArray: Todo[], todoItem: Todo): void {
 </template>
 
 <style lang="scss" scoped>
-  .todo-item {
-    &:hover > button.todo-text {
-      @apply bg-gray-300;
-    }
-    > button.todo-text > .todo-text-side {
-      margin-left:auto;
-    }
-    &:hover > .option-buttons {
-      opacity:1;
-    }
-    > .option-buttons {
-      display:flex;
-      align-items:center;
-      opacity:0;
-      >.remove-button {
-        background:red;
-        color:white;
-      }
+.todo-item {
+  &:hover > button.todo-text {
+    @apply bg-gray-300;
+  }
+  > button.todo-text > .todo-text-side {
+    margin-left: auto;
+  }
+  &:hover > .option-buttons {
+    opacity: 1;
+  }
+  > .option-buttons {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    > .remove-button {
+      background: red;
+      color: white;
     }
   }
+}
 </style>
