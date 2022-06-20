@@ -1,11 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root {
   --duration:.5s;
   --offset:0;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 html, body {
   @apply min-w-full min-h-[100vh];
@@ -14,20 +14,27 @@ body {
   @apply bg-gray-100;
 }
 * {
-  @apply transition-all duration-150;
+  font-family:"Open Sans";
+  @apply transition-all duration-150 ;
 }
 input[type="text"] {
-  @apply p-2 bg-white outline-none rounded-[0.5rem] mx-2 focus:bg-gray-300;
+  @apply p-2 bg-white outline-none rounded-[0.5rem] mx-2 focus:bg-gray-300 mx-0 w-full;
+}
+input[type="checkbox"] {
+  @apply appearance-none w-4 h-4 rounded-md;
 }
 button, input[type="button"]:not(.override), [type="submit"]:not(.override) {
   @apply p-1.5 bg-white rounded-lg hover:bg-gray-300;
 }
 h1 {
-  @apply text-3xl;
+  @apply text-4xl;
 }
 h2 {
   @apply text-2xl;
   font-weight:bold;
+}
+h1, h2,h3, h4, h5 ,h6 {
+  @apply font-bold;
 }
 .todo-text {
   @apply flex gap-1;
