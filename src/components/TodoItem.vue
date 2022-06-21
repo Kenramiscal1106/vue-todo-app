@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { pastDeadline } from "../lib/utils";
-
+  const props = defineProps<Props>();
+const contextOpen = ref<boolean>(false)
 interface Props {
   todos: { value: Todo[] };
   specificTodoItem: Todo;
@@ -13,7 +15,6 @@ type Todo = {
   id: number;
   text: string;
 };
-const props = defineProps<Props>();
 function toggleDone(todoItemsArray: Todo[], todoItem: Todo): void {
   props.todos.value = todoItemsArray.map((item) => {
     if (item.id === todoItem.id) {
@@ -30,24 +31,26 @@ function toggleDone(todoItemsArray: Todo[], todoItem: Todo): void {
 function removeTodo(todoItemsArray: Todo[], todoItem: Todo): void {
   props.todos.value = todoItemsArray.filter((item) => item.id !== todoItem.id);
 }
+window.addEventListener("click", () => contextOpen.value = false)
 </script>
 
 <template>
-  <div class="">
-    <button
-      class=""
-      @click="toggleDone(todos.value, specificTodoItem)"
-    >
-      <input type="checkbox" name="" id="" v-model="specificTodoItem.done" class=""/>{{
-        specificTodoItem.text
-      }}
-      <div class="">
+  <div class="todo-item" @contextmenu="() => contextOpen = true">
+      <div class="flex">
+        <input type="checkbox" name="" id="" v-model="specificTodoItem.done" class="" />
+      </div>
+      <div class="flex">
+
+        {{
+            specificTodoItem.text
+        }}
+      </div>
+      <!-- <div class="">
         <span v-if="specificTodoItem.deadline !== ''"
           >Deadline: {{ specificTodoItem.deadline }}</span
         >
-      </div>
-    </button>
-    <div class="">
+      </div> -->
+    <!-- <div class="">
       <button
         @click="removeTodo(todos.value, specificTodoItem)"
         class=""
@@ -79,19 +82,26 @@ function removeTodo(todoItemsArray: Todo[], todoItem: Todo): void {
           <circle cx="29.5" cy="18.5" r="4.5" fill="currentColor" />
         </svg>
       </button>
+    </div> -->
+    <div class="context-menu" v-if="contextOpen">
+      Lorem ipsum dolor sit amet consectetur adipisicing.
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-
-button {
-  @apply transition-colors duration-100;
-  &.todo-is-done {
-    @apply text-gray-400;
+input[type="checkbox"] {
+  @apply appearance-none border-black rounded-[50%] w-6 h-6 border-2 mr-1 checked:border-green-400 checked:bg-green-400 relative;
+}
+div.todo-item {
+  display:flex;
+  padding:1rem;
+  align-items: center;
+  &:not(:last-child) {
+    @apply border-t-gray-300 border-t-2;
   }
-  &:not(.todo-is-done) {
-    @apply hover:bg-gray-300;
+  &:last-child {
+    @apply border-y-gray-300 border-y-2;
   }
 }
 </style>
