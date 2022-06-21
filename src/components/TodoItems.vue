@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Date, Todo } from '@/lib/utils';
+import type { Todo } from '@/lib/utils';
 import TodoItem from './TodoItem.vue';
 
 const {todoItems,selectedTodo, currentTimeObj} = defineProps<{
@@ -9,7 +9,9 @@ const {todoItems,selectedTodo, currentTimeObj} = defineProps<{
   selectedTodo: {
     value: Todo | null
   },
-  currentTimeObj: Date
+  currentTimeObj: {
+    [key:string]:any
+  }
 }>()
 </script>
 
