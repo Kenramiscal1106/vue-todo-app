@@ -49,13 +49,13 @@ function updateTodo() {
 </script>
 
 <template>
-  <main class="">
+  <main class="content">
     <h1>{{ time }}</h1>
     <Modal v-if="modalOpen">
       <TodoForm v-model:todo-items="todoItems" />
-    </Modal>
-    <button @click="() => modalOpen = !modalOpen" v-if="modalOpen" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button>
-    <div
+    </Modal><!-- 
+    <button @click="() => modalOpen = !modalOpen" v-if="modalOpen" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button> -->
+    <!-- <div
       class="">
       <h3>Warning: there are some todos that are past deadline</h3>
       <span v-if="thereIsDeadline > 0">
@@ -76,8 +76,20 @@ function updateTodo() {
       <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }">Mark all as undone</button>
       <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }">Mark all as Done</button>
       <button @click="() => { todoItems.value = [] }">clear Todo</button>
-    </div>
+    </div> -->
     <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo"/>
-    <button @click="() => modalOpen = !modalOpen">Create todo</button>
+    <div class="flex gap-4 fixed bottom-2 right-2">
+      <button @click="() => modalOpen = !modalOpen" class="">Create todo</button>
+    </div>
   </main>
 </template>
+<style lang="scss" scoped>
+  main.content {
+    font-family: "Open Sans", Montserrat, sans-serif;
+    max-width: 49rem;
+    margin:auto;
+    > * {
+      text-align:center;
+    }
+  }
+</style>
