@@ -17,8 +17,13 @@ const {todoItems,selectedTodo, currentTimeObj} = defineProps<{
 
 
 <template>
-  <div class="" v-if="todoItems.value.length !== 0" v-for="todoItem in todoItems.value" :key="todoItem.id">
-    <TodoItem v-model:todos="todoItems" v-model:selected-todo="selectedTodo" :specific-todo-item="todoItem"
-            :current-time-ref="currentTimeObj" />
+  <div v-if="todoItems.value.length !== 0">
+    <template v-for="todoItem in todoItems.value" :key="todoItem.id">
+      <TodoItem v-model:todos="todoItems" v-model:selected-todo="selectedTodo" :specific-todo-item="todoItem"
+              :current-time-ref="currentTimeObj" />
+    </template>
+  </div>
+  <div v-else>
+    <div>There are no todos</div>
   </div>
 </template>
