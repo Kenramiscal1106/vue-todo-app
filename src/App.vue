@@ -4,12 +4,15 @@ import TodoForm from './components/TodoForm.vue';
 import TodoItems from './components/TodoItems.vue'
 import Modal from './components/Modal.vue'
 import * as utils from "./lib/utils"
+import ClearIcon from "./components/icons/ClearIcon.vue"
+import PlusIcon from "./components/icons/PlusIcon.vue"
+import CheckIcon from "./components/icons/CheckIcon.vue"
 const currentTimeObj: Ref<utils.Date> = ref(utils.currentTime().hour24);
 const time: Ref<string> = ref(utils.currentTime().hour12.timeString());
 const todoItems = reactive<{ value: utils.Todo[] }>({ value: [] })
 const selectedTodo = reactive<{ value: null | utils.Todo }>({ value: null })
 const thereIsDeadline = ref<number>(0);
-const modalOpen = ref<boolean>(false)
+const modalOpen = reactive({value: false})
 setInterval(async () => {
   time.value = utils.currentTime().hour12.timeString()
   currentTimeObj.value = utils.currentTime().hour24
@@ -46,13 +49,20 @@ function updateTodo() {
   todoItems.value = todoItems.value
   selectedTodo.value = null
 }
+window.addEventListener("keyup", (e) =>{
+  if (e.key === "Escape") {
+    if (modalOpen.value) {
+      modalOpen.value = false
+    }
+  }
+})
 </script>
 
 <template>
   <main class="content">
     <h1>{{ time }}</h1>
-    <Modal v-if="modalOpen">
-      <TodoForm v-model:todo-items="todoItems" />
+    <Modal v-if="modalOpen.value" >
+      <TodoForm v-model:todo-items="todoItems" v-model:modal-open="modalOpen"/>
     </Modal><!-- 
     <button @click="() => modalOpen = !modalOpen" v-if="modalOpen" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button> -->
     <!-- <div
@@ -71,15 +81,13 @@ function updateTodo() {
         <input type="text" v-model="selectedTodo.value.deadline">
         <button type="submit">Update</button>
       </form>
-    </div>
-    <div>
-      <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }">Mark all as undone</button>
-      <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }">Mark all as Done</button>
-      <button @click="() => { todoItems.value = [] }">clear Todo</button>
-    </div> -->
+    </div>-->
     <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo"/>
-    <div class="flex gap-4 fixed bottom-2 right-2">
-      <button @click="() => modalOpen = !modalOpen" class="">Create todo</button>
+    <div class="button-container">
+      <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }">Mark all as undone</button>
+      <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }"><CheckIcon height="20" width="20"/></button>
+      <button @click="() => { todoItems.value = [] }"><ClearIcon height="20" width="20"/></button>
+      <button @click="() => modalOpen.value = true" class=""><PlusIcon height="20" width="20"/></button>
     </div>
   </main>
 </template>
@@ -92,4 +100,18 @@ function updateTodo() {
       text-align:center;
     }
   }
+  div.button-container {
+    @apply flex
+    gap-3
+    fixed
+    bottom-2
+    right-2;
+    button {
+      @apply 
+      bg-gray-100
+      text-black
+      p-2
+      hover:bg-gray-300;
+    }
+  } 
 </style>
