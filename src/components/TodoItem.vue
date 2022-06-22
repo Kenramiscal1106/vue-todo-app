@@ -91,12 +91,29 @@ window.addEventListener("click", () => contextOpen.value = false)
 
 <style lang="scss" scoped>
 input[type="checkbox"] {
-  @apply appearance-none border-black rounded-[50%] w-6 h-6 border-2 mr-1 checked:border-green-400 checked:bg-green-400 relative;
+  &:not(:checked) {
+    @apply hover:border-gray-700;
+  }
+  @apply appearance-none 
+  transition-[background] 
+  duration-100 
+  border-gray-500 
+  rounded-[50%] 
+  w-6 h-6 
+  border-2
+  checked:border-black 
+  relative
+  overflow-hidden
+  after:absolute
+  after:w-full
+  after:h-full
+  after:top-full
+  after:bg-green-400 
+  checked:after:top-0
+  after:transition-[top] duration-200;
 }
 div.todo-item {
-  display:flex;
-  padding:1rem;
-  align-items: center;
+  @apply flex p-4 items-center gap-4 ;
   &:not(:last-child) {
     @apply border-t-gray-300 border-t-2;
   }
