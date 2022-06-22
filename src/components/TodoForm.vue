@@ -76,7 +76,7 @@ function addTodo() {
   @apply my-3 text-left;
 }
 input[type="text"] {
-  @apply placeholder:text-black py-4 px-3;
+  @apply placeholder:text-black py-3 px-4;
 }
 form :is(button, [type="submit"]) {
   @apply px-4 py-2 bg-gray-300
