@@ -7,6 +7,8 @@ import * as utils from "./lib/utils"
 import ClearIcon from "./components/icons/ClearIcon.vue"
 import PlusIcon from "./components/icons/PlusIcon.vue"
 import CheckIcon from "./components/icons/CheckIcon.vue"
+import ResetIcon from "./components/icons/ResetIcon.vue"
+import Tooltip from "./components/Tooltip.vue"
 const currentTimeObj: Ref<utils.Date> = ref(utils.currentTime().hour24);
 const time: Ref<string> = ref(utils.currentTime().hour12.timeString());
 const todoItems = reactive<{ value: utils.Todo[] }>({ value: [] })
@@ -84,10 +86,16 @@ window.addEventListener("keyup", (e) =>{
     </div>-->
     <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo"/>
     <div class="button-container">
-      <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }">Mark all as undone</button>
-      <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }"><CheckIcon height="20" width="20"/></button>
-      <button @click="() => { todoItems.value = [] }"><ClearIcon height="20" width="20"/></button>
-      <button @click="() => modalOpen.value = true" class=""><PlusIcon height="20" width="20"/></button>
+      <Tooltip :tooltip-message='"Reset all todos"' :position="'top'">
+        <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }"><ResetIcon height="20" width="20"/></button>
+      </Tooltip>
+      <Tooltip tooltip-message="Mark all as done" position="top">
+        <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }"><CheckIcon height="20" width="20"/></button>
+      </Tooltip>
+      <Tooltip tooltip-message="Clear all todos" position="top">
+        <button @click="() => { todoItems.value = [] }"><ClearIcon height="20" width="20"/></button>
+      </Tooltip>
+      <button @click="() => modalOpen.value = true" class=""><PlusIcon height="20" width="20"/> Add Todo</button>
     </div>
   </main>
 </template>
@@ -105,13 +113,13 @@ window.addEventListener("keyup", (e) =>{
     gap-3
     fixed
     bottom-2
-    right-2;
+    right-2 items-center;
     button {
       @apply 
       bg-gray-100
       text-black
       p-2
-      hover:bg-gray-300;
+      hover:bg-gray-300 flex items-center gap-2;
     }
   } 
 </style>
