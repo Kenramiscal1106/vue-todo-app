@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="fixed top-0 left-0 w-full h-full bg-white bg-opacity-40 backdrop-blur-sm grid place-content-center modal z-10">
+  <div class="fixed top-0 left-0 w-full h-full bg-white bg-opacity-70 backdrop-blur-sm grid place-content-center modal z-10">
     <slot></slot>
   </div>
 </template> 
@@ -18,6 +18,6 @@
     }
   }
   .modal {
-    animation: fade-in 100ms forwards;
+    animation: fade-in 200ms forwards;
   }
 </style>
