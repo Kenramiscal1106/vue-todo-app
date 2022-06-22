@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Todo } from '@/lib/utils';
 import TodoItem from './TodoItem.vue';
+import SadFace from './icons/SadFace.vue';
 
 const {todoItems,selectedTodo, currentTimeObj} = defineProps<{
   todoItems: {
@@ -24,6 +25,13 @@ const {todoItems,selectedTodo, currentTimeObj} = defineProps<{
     </template>
   </div>
   <div v-else>
-    <div>There are no todos</div>
+    <div>
+      <div>
+        <span class="m-auto block w-max">
+          <SadFace height="160" width="160"/>
+        </span>
+      </div>
+      Ooops, it appears that there are no todos.
+    </div>
   </div>
 </template>
