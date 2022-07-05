@@ -115,10 +115,10 @@ input[type="checkbox"] {
 div.todo-item {
   @apply flex p-4 items-center gap-4 ;
   &:not(:last-child) {
-    @apply border-t-gray-300 border-t-2;
+    @apply border-t-gray-300 border-t-[1px];
   }
   &:last-child {
-    @apply border-y-gray-300 border-y-2;
+    @apply border-y-gray-300 border-y-[1px];
   }
 }
 </style>
