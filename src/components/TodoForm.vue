@@ -121,7 +121,9 @@ function addTodo() {
             <template v-for="label in labels">
                 <Label :hue-sat="label.hueSat" :text="label.text"/>
             </template>
+            <button>Add new Label</button>
         </div>
+
       </div>
       <!-- <div>
         <input type="text" id="deadline" v-model="todoDeadline" placeholder="Due:">
@@ -139,7 +141,7 @@ function addTodo() {
   </form>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .form-subcontainer > div{
   @apply my-3 text-left;
 }
