@@ -20,7 +20,7 @@
     }
   }
   .tooltip-content {
-    @apply absolute transition-opacity duration-150  w-max bg-gray-300 px-4 py-2;
+    @apply absolute transition-opacity duration-100  w-max text-white bg-gray-600 px-4 py-2;
     visibility: hidden;
     opacity:0;
     &.top {
