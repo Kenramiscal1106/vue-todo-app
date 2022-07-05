@@ -127,3 +127,7 @@ export type Todo = {
   id: number;
   text: string;
 };
+export interface LabelObject {
+  hueSat:string,
+  text:string,
+}
