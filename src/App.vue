@@ -106,6 +106,7 @@ window.addEventListener("keyup", (e) =>{
     margin:auto;
     > * {
       text-align:center;
+      @apply my-3
     }
   }
   div.button-container {
@@ -118,7 +119,6 @@ window.addEventListener("keyup", (e) =>{
       @apply 
       bg-gray-100
       text-black
-      p-2
       hover:bg-gray-300 flex items-center gap-2;
     }
   } 
