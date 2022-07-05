@@ -2,11 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-size:8px;
-}
-@for $i from 1 to 6 {
-  h#{$i} {
-    font-size: calc(var(--font-size) * (6 - $i) + 5px);
+@layer base {
+  h1 {
+    @apply text-5xl;
   }
+
+  h2 {
+    @apply text-4xl
+  }
+
+  h3 {
+    @apply text-3xl
+  }
+
+  h4 {
+    @apply text-2xl
+  }
+
+  h5 {
+    @apply text-xl
+  }
+  h6 {
+    @apply text-lg;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold font-open-sans;
+  }
+}
+button {
+  @apply bg-gray-100 transition-colors duration-100 p-2;
 }
