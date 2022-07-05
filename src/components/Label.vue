@@ -11,5 +11,3 @@ const props = defineProps<LabelObject>()
     {{ props.text }}
   </div>
 </template>
-<style scoped>
-</style>
