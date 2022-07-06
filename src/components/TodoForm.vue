@@ -1,10 +1,19 @@
 <script lang="ts" setup>
 import type { LabelObject, Todo } from '@/lib/utils';
-import { ref, watch, type Ref } from 'vue';
+import { reactive, ref, watch, type Ref } from 'vue';
 import PlusIcon from './icons/PlusIcon.vue';
 import Label from './Label.vue';
 const todoInput: Ref<string> = ref("")
 const isValidDeadline: Ref<boolean> = ref(true);
+const labelAddIsOpen:Ref<boolean> = ref(false);
+// const hueSatPattern = //g;
+const newLabel = reactive<LabelObject>({
+  text: "",
+  hueSat: "",
+})
+// watch(newLabel, () => {
+//   if (newLaabel)
+// } )
 const { todoItems, modalOpen } = defineProps<{
   todoItems: {
     value: Todo[]
@@ -23,7 +32,7 @@ const deadlineType:Ref<"today" | "specific"> = ref("today")
     isValidDeadline.value = false
   }
 }) */
-const labels:LabelObject[] = [
+const labels:Ref<LabelObject[]> = ref([
   {
     hueSat: "240, 100%",
     text: "ast"
@@ -72,7 +81,7 @@ const labels:LabelObject[] = [
     hueSat: "120, 100%",
     text: "ast"
   },
-]
+])
 function addTodo() {
   if (todoInput.value != "" && isValidDeadline.value) {
     todoItems.value = [...todoItems.value, {
@@ -97,7 +106,7 @@ function addTodo() {
 </script>
 
 <template>
-  <form @submit.prevent="addTodo" autocomplete="off" class="p-8 bg-gray-200 max-w-md">
+  <form @submit.prevent="addTodo" autocomplete="off" class="p-8 bg-gray-200 max-w-md" @click.stop="">
     <div class="form-subcontainer">
       <div>
         <input type="text" v-model="todoInput" id="text" placeholder="Enter todo" class="w-full">
@@ -115,15 +124,22 @@ function addTodo() {
           <input type="time">
         </div>
       </div>
-      <div>
-        
+      <div class="space-y-2">
         <div class="flex flex-wrap gap-2">
             <template v-for="label in labels">
                 <Label :hue-sat="label.hueSat" :text="label.text"/>
-            </template>
-            <button>Add new Label</button>
-        </div>
 
+            </template>
+        </div>
+        <button @click.prevent="() => {
+          labelAddIsOpen = !labelAddIsOpen
+        }">{{labelAddIsOpen ? "Close" : ""}} {{labelAddIsOpen ? "a" : "A"}}dd new Label <PlusIcon width="18" height="18" v-if="!labelAddIsOpen"/></button>
+        <div v-if="labelAddIsOpen">
+          <div>
+            <input type="text" placeholder="Type hue and saturation values here..."/>
+          </div>
+          <input type="text" placeholder="Type label text...">
+        </div>
       </div>
       <!-- <div>
         <input type="text" id="deadline" v-model="todoDeadline" placeholder="Due:">
@@ -146,7 +162,7 @@ function addTodo() {
   @apply my-3 text-left;
 }
 input[type="text"] {
-  @apply placeholder:text-black py-3 px-4;
+  @apply placeholder:text-black py-3 px-4 w-full;
 }
 form :is(button, [type="submit"]) {
   @apply px-4 py-2 bg-gray-300
