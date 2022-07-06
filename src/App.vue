@@ -63,7 +63,7 @@ window.addEventListener("keyup", (e) =>{
 <template>
   <main class="content">
     <h1>{{ time }}</h1>
-    <Modal v-if="modalOpen.value" >
+    <Modal v-if="modalOpen.value" v-model:modal-open="modalOpen">
       <TodoForm v-model:todo-items="todoItems" v-model:modal-open="modalOpen"/>
     </Modal><!-- 
     <button @click="() => modalOpen = !modalOpen" v-if="modalOpen" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button> -->
