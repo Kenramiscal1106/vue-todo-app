@@ -3,7 +3,8 @@ import type { LabelObject, Todo } from '@/lib/utils';
 import { reactive, ref, type Ref } from 'vue';
 import PlusIcon from './icons/PlusIcon.vue';
 import Label from './Label.vue';
-const todoInput: Ref<string> = ref("")
+const todoInput: Ref<string> = ref("");
+const validTodoInput: Ref<boolean> = ref(true);
 const isValidDeadline: Ref<boolean> = ref(true);
 const labelAddIsOpen:Ref<boolean> = ref(false);
 // const hueSatPattern = //g;
@@ -100,7 +101,7 @@ function addTodo() {
     return
   }
   else {
-    alert("You haven't entered any 😠")
+    validTodoInput.value = false
   }
 }
 </script>
@@ -110,8 +111,8 @@ function addTodo() {
     <div class="form-subcontainer">
       <div>
         <input type="text" v-model="todoInput" id="text" placeholder="Enter todo" :class="[{
-    'border-2 border-red-500': todoInput === ''}, 'w-full']">
-        <div v-if="todoInput===''" class="text-red-500">You must enter a todo</div>
+    'border-2 border-red-500': !validTodoInput}, 'w-full']" @input="validTodoInput = todoInput !== ''">
+        <div v-if="!validTodoInput" class="text-red-500">You must enter a todo</div>
       </div>
       <div>
         <div for="">Deadline: </div>
