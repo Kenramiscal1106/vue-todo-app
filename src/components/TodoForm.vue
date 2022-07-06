@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { LabelObject, Todo } from '@/lib/utils';
-import { reactive, ref, type Ref } from 'vue';
+import { reactive, watch, ref, type Ref } from 'vue';
 import PlusIcon from './icons/PlusIcon.vue';
 import Label from './Label.vue';
 const todoInput: Ref<string> = ref("");
@@ -12,9 +12,6 @@ const newLabel = reactive<LabelObject>({
   text: "",
   hueSat: "",
 })
-// watch(newLabel, () => {
-//   if (newLaabel)
-// } )
 const { todoItems, modalOpen } = defineProps<{
   todoItems: {
     value: Todo[]
@@ -33,56 +30,11 @@ const deadlineType:Ref<"today" | "specific"> = ref("today")
     isValidDeadline.value = false
   }
 }) */
-const labels:Ref<LabelObject[]> = ref([
-  {
-    hueSat: "240, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "240, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "240, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "240, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "240, 100%",
-    text: "A label"
-  },
-  {
-    hueSat: "120, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "120, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "120, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "120, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "120, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "120, 100%",
-    text: "ast"
-  },
-  {
-    hueSat: "120, 100%",
-    text: "ast"
-  },
-])
+const labelStore = localStorage.getItem('labels')
+const labels:Ref<LabelObject[]> = ref(labelStore ? JSON.parse(labelStore) : [])
+watch(labels, () => {
+  localStorage.setItem("labels", JSON.stringify(labels.value))
+})
 function addTodo() {
   if (todoInput.value != "" && isValidDeadline.value) {
     todoItems.value = [...todoItems.value, {
@@ -138,10 +90,18 @@ function addTodo() {
           labelAddIsOpen = !labelAddIsOpen
         }">{{labelAddIsOpen ? "Close" : ""}} {{labelAddIsOpen ? "a" : "A"}}dd new Label <PlusIcon width="18" height="18" v-if="!labelAddIsOpen"/></button>
         <div v-if="labelAddIsOpen">
-          <div>
-            <input type="text" placeholder="Type hue and saturation values here..."/>
-          </div>
-          <input type="text" placeholder="Type label text...">
+          <form @submit.prevent="() => {
+            if (newLabel.hueSat === '' || newLabel.text === '') return
+            labels = [...labels, {...newLabel}]
+            newLabel.hueSat = ''
+            newLabel.text = ''
+          }">
+            <div>
+              <input type="text" placeholder="Type hue and saturation values here..." v-model="newLabel.hueSat"/>
+            </div>
+            <input type="text" placeholder="Type label text..." v-model="newLabel.text">
+            <button type="submit">Add label</button>
+          </form>
         </div>
       </div>
       <!-- <div>
