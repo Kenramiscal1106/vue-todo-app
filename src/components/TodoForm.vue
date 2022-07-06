@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { LabelObject, Todo } from '@/lib/utils';
-import { reactive, ref, watch, type Ref } from 'vue';
+import { reactive, ref, type Ref } from 'vue';
 import PlusIcon from './icons/PlusIcon.vue';
 import Label from './Label.vue';
 const todoInput: Ref<string> = ref("")
