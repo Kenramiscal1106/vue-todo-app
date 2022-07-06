@@ -109,7 +109,9 @@ function addTodo() {
   <form @submit.prevent="addTodo" autocomplete="off" class="p-8 bg-gray-200 max-w-md" @click.stop="">
     <div class="form-subcontainer">
       <div>
-        <input type="text" v-model="todoInput" id="text" placeholder="Enter todo" class="w-full">
+        <input type="text" v-model="todoInput" id="text" placeholder="Enter todo" :class="[{
+    'border-2 border-red-500': todoInput === ''}, 'w-full']">
+        <div v-if="todoInput===''" class="text-red-500">You must enter a todo</div>
       </div>
       <div>
         <div for="">Deadline: </div>
