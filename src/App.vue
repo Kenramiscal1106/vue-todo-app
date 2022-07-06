@@ -14,7 +14,8 @@ const time: Ref<string> = ref(utils.currentTime().hour12.timeString());
 const todoItems = reactive<{ value: utils.Todo[] }>({ value: [] })
 const selectedTodo = reactive<{ value: null | utils.Todo }>({ value: null })
 const thereIsDeadline = ref<number>(0);
-const modalOpen = reactive({value: false})
+const todoFormVisible = reactive({ value: false })
+const clearTodoVisible = reactive({ value: false })
 setInterval(async () => {
   time.value = utils.currentTime().hour12.timeString()
   currentTimeObj.value = utils.currentTime().hour24
@@ -51,10 +52,10 @@ function updateTodo() {
   todoItems.value = todoItems.value
   selectedTodo.value = null
 }
-window.addEventListener("keyup", (e) =>{
+window.addEventListener("keyup", (e) => {
   if (e.key === "Escape") {
-    if (modalOpen.value) {
-      modalOpen.value = false
+    if (todoFormVisible.value) {
+      todoFormVisible.value = false
     }
   }
 })
@@ -63,10 +64,21 @@ window.addEventListener("keyup", (e) =>{
 <template>
   <main class="content">
     <h1>{{ time }}</h1>
-    <Modal v-if="modalOpen.value" v-model:modal-open="modalOpen">
-      <TodoForm v-model:todo-items="todoItems" v-model:modal-open="modalOpen"/>
-    </Modal><!-- 
-    <button @click="() => modalOpen = !modalOpen" v-if="modalOpen" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button> -->
+    <Modal v-if="todoFormVisible.value" v-model:modal-open="todoFormVisible">
+      <TodoForm v-model:todo-items="todoItems" v-model:modal-open="todoFormVisible" />
+    </Modal>
+    <Modal v-model:modal-open="clearTodoVisible" v-if="clearTodoVisible.value">
+      <div @click.stop="" class="bg-gray-200 p-4">
+        Are you sure you want to delete all todos?
+        <div class="flex space-x-3">
+          <button @click="clearTodoVisible.value = false" class="p-3 bg-black bg-opacity-20">cancel</button>
+          <button
+            @click="todoItems.value = []; clearTodoVisible.value = false" class="px-4 py-3 bg-red-500 hover:bg-red-700 text-white">Yes</button>
+        </div>
+      </div>
+    </Modal>
+    <!-- 
+    <button @click="() => todoFormVisible = !todoFormVisible" v-if="todoFormVisible" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button> -->
     <!-- <div
       class="">
       <h3>Warning: there are some todos that are past deadline</h3>
@@ -84,42 +96,45 @@ window.addEventListener("keyup", (e) =>{
         <button type="submit">Update</button>
       </form>
     </div>-->
-    <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo"/>
+    <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo" />
     <div class="button-container">
       <Tooltip :tooltip-message='"Reset all todos"' :position="'top'">
-        <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }"><ResetIcon height="20" width="20"/></button>
+        <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }">
+          <ResetIcon height="20" width="20" />
+        </button>
       </Tooltip>
       <Tooltip tooltip-message="Mark all as done" position="top">
-        <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }"><CheckIcon height="20" width="20"/></button>
+        <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }">
+          <CheckIcon height="20" width="20" />
+        </button>
       </Tooltip>
       <Tooltip tooltip-message="Clear all todos" position="top">
-        <button @click="() => { todoItems.value = [] }"><ClearIcon height="20" width="20"/></button>
+        <button @click="() => { clearTodoVisible.value = true }">
+          <ClearIcon height="20" width="20" />
+        </button>
       </Tooltip>
-      <button @click="() => modalOpen.value = true" class=""><PlusIcon height="20" width="20"/> Add Todo</button>
+      <button @click="() => todoFormVisible.value = true" class="">
+        <PlusIcon height="20" width="20" /> Add Todo
+      </button>
     </div>
   </main>
 </template>
 <style lang="scss" scoped>
-  main.content {
-    font-family: "Open Sans", Montserrat, sans-serif;
-    max-width: 49rem;
-    margin:auto;
-    > * {
-      text-align:center;
-    }
+main.content {
+  font-family: "Open Sans", Montserrat, sans-serif;
+  max-width: 49rem;
+  margin: auto;
+
+  >* {
+    text-align: center;
   }
-  div.button-container {
-    @apply flex
-    gap-3
-    fixed
-    bottom-2
-    right-2 items-center;
-    button {
-      @apply 
-      bg-gray-100
-      text-black
-      p-2
-      hover:bg-gray-300 flex items-center gap-2;
-    }
-  } 
+}
+
+div.button-container {
+  @apply flex gap-3 fixed bottom-2 right-2 items-center;
+
+  button {
+    @apply bg-gray-100 text-black p-2 hover:bg-gray-300 flex items-center gap-2;
+  }
+}
 </style>
