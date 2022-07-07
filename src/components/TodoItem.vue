@@ -108,13 +108,4 @@ input[type="checkbox"] {
   checked:after:top-0
   after:transition-[top] duration-200;
 }
-div.todo-item {
-  @apply flex p-4 items-center gap-4 ;
-  &:not(:last-child) {
-    @apply border-t-gray-300 border-t-[1px];
-  }
-  &:last-child {
-    @apply border-y-gray-300 border-y-[1px];
-  }
-}
 </style>
