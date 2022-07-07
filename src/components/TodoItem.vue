@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { pastDeadline } from "../lib/utils";
+import { pastDeadline, type Todo } from "../lib/utils";
   const props = defineProps<Props>();
 const contextOpen = ref<boolean>(false)
 interface Props {
@@ -9,12 +9,6 @@ interface Props {
   currentTimeRef: any;
   selectedTodo: { value: Todo | null };
 }
-type Todo = {
-  deadline: string;
-  done: boolean;
-  id: number;
-  text: string;
-};
 function toggleDone(todoItemsArray: Todo[], todoItem: Todo): void {
   props.todos.value = todoItemsArray.map((item) => {
     if (item.id === todoItem.id) {
@@ -35,22 +29,24 @@ window.addEventListener("click", () => contextOpen.value = false)
 </script>
 
 <template>
-  <div class="todo-item" @contextmenu="() => contextOpen = true">
-      <div class="flex">
+  <div class="flex p-4 items-center gap-4 border-t-gray-300 border-t-[1px] last:border-y-gray-300 last:border-y-[1px]" @contextmenu="() => contextOpen = true">
+      <div class="flex items-center">
         <input type="checkbox" name="" id="" v-model="specificTodoItem.done" class="" />
       </div>
-      <div class="flex">
-
-        {{
-            specificTodoItem.text
-        }}
+      <div>
+        <div>
+          {{specificTodoItem.text}}
+        </div>
+        <div class="text-secondary-light text-sub" >
+          Due in {{specificTodoItem.deadline}}
+        </div>
       </div>
       <!-- <div class="">
         <span v-if="specificTodoItem.deadline !== ''"
           >Deadline: {{ specificTodoItem.deadline }}</span
         >
-      </div> -->
-    <!-- <div class="">
+      </div>
+      <div class="">
       <button
         @click="removeTodo(todos.value, specificTodoItem)"
         class=""
