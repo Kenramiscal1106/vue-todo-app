@@ -18,7 +18,7 @@ const {todoItems,selectedTodo, currentTimeObj} = defineProps<{
 
 
 <template>
-  <div v-if="todoItems.value.length !== 0">
+  <div v-if="todoItems.value.length !== 0" class="px-2">
     <template v-for="todoItem in todoItems.value" :key="todoItem.id">
       <TodoItem v-model:todos="todoItems" v-model:selected-todo="selectedTodo" :specific-todo-item="todoItem"
               :current-time-ref="currentTimeObj" />
