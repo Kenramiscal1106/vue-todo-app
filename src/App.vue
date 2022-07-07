@@ -60,12 +60,11 @@ window.addEventListener("keyup", (e) => {
   }
 })
 </script>
-
 <template>
   <main class="content">
-    <h1>{{ time }}</h1>
+    <h1 class="text-center">{{ time }}</h1>
     <Modal v-if="todoFormVisible.value" v-model:modal-open="todoFormVisible">
-      <TodoForm v-model:todo-items="todoItems" v-model:modal-open="todoFormVisible" />
+      <todo-form v-model:todo-items="todoItems" v-model:modal-open="todoFormVisible" />
     </Modal>
     <Modal v-model:modal-open="clearTodoVisible" v-if="clearTodoVisible.value">
       <div @click.stop="" class="bg-gray-200 p-4">
@@ -78,8 +77,8 @@ window.addEventListener("keyup", (e) => {
       </div>
     </Modal>
     <!-- 
-    <button @click="() => todoFormVisible = !todoFormVisible" v-if="todoFormVisible" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button> -->
-    <!-- <div
+    <button @click="() => todoFormVisible = !todoFormVisible" v-if="todoFormVisible" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button>
+     <div
       class="">
       <h3>Warning: there are some todos that are past deadline</h3>
       <span v-if="thereIsDeadline > 0">
@@ -96,38 +95,37 @@ window.addEventListener("keyup", (e) => {
         <button type="submit">Update</button>
       </form>
     </div>-->
-    <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo" />
+    <todo-items :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo" />
     <div class="button-container">
       <Tooltip :tooltip-message='"Reset all todos"' :position="'top'">
         <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }">
-          <ResetIcon height="20" width="20" />
+          <reset-icon height="20" width="20" />
         </button>
       </Tooltip>
       <Tooltip tooltip-message="Mark all as done" position="top">
         <button @click="() => { todoItems.value = utils.markAllAsDone(todoItems) }">
-          <CheckIcon height="20" width="20" />
+          <check-icon height="20" width="20" />
         </button>
       </Tooltip>
       <Tooltip tooltip-message="Clear all todos" position="top">
         <button @click="() => { clearTodoVisible.value = true }">
-          <ClearIcon height="20" width="20" />
+          <clear-icon height="20" width="20" />
         </button>
       </Tooltip>
       <button @click="() => todoFormVisible.value = true" class="">
-        <PlusIcon height="20" width="20" /> Add Todo
+        <plus-icon height="20" width="20" /> Add Todo
       </button>
     </div>
   </main>
 </template>
+
+
+
 <style lang="scss" scoped>
 main.content {
   font-family: "Open Sans", Montserrat, sans-serif;
   max-width: 49rem;
   margin: auto;
-
-  >* {
-    text-align: center;
-  }
 }
 
 div.button-container {
