@@ -64,7 +64,7 @@ window.addEventListener("keyup", (e) => {
   <main class="content">
     <h1 class="text-center">{{ time }}</h1>
     <Modal v-if="todoFormVisible.value" v-model:modal-open="todoFormVisible">
-      <todo-form v-model:todo-items="todoItems" v-model:modal-open="todoFormVisible" />
+      <TodoForm v-model:todo-items="todoItems" v-model:modal-open="todoFormVisible" />
     </Modal>
     <Modal v-model:modal-open="clearTodoVisible" v-if="clearTodoVisible.value">
       <div @click.stop="" class="bg-gray-200 p-4">
@@ -95,7 +95,7 @@ window.addEventListener("keyup", (e) => {
         <button type="submit">Update</button>
       </form>
     </div>-->
-    <todo-items :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo" />
+    <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo" />
     <div class="button-container">
       <Tooltip :tooltip-message='"Reset all todos"' :position="'top'">
         <button @click="() => { todoItems.value = utils.markAllAsUndone(todoItems) }">
@@ -118,8 +118,6 @@ window.addEventListener("keyup", (e) => {
     </div>
   </main>
 </template>
-
-
 
 <style lang="scss" scoped>
 main.content {
