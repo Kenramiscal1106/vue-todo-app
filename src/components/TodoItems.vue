@@ -24,7 +24,7 @@ const {todoItems,selectedTodo, currentTimeObj} = defineProps<{
               :current-time-ref="currentTimeObj" />
     </template>
   </div>
-  <div v-else>
+  <div v-else class="text-center">
     <div>
       <div>
         <span class="m-auto block w-max">
