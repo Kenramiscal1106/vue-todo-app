@@ -126,7 +126,12 @@ export type Todo = {
   done: boolean;
   id: number;
   text: string;
+  label?:Label
 };
+interface Label {
+  hueSat: string,
+  text: string,
+}
 export interface LabelObject {
   hueSat:string,
   text:string,
