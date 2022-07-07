@@ -21,6 +21,7 @@ const { todoItems, modalOpen } = defineProps<{
   }
 }>()
 // const DeadlinePattern = /(^(1[0-2]|0?[0-9]):[0-5][0-9] ?(P|A)m$)|(^([0-2][0-3]|0?[1-9]):[0-5][0-9] ?$)/ig;
+const deadlineEnabled:Ref<boolean> = ref(false);
 const todoDeadline: Ref<string> = ref("");
 const deadlineType:Ref<"today" | "specific"> = ref("today")
 /* watch(todoDeadline, () => {
@@ -32,6 +33,7 @@ const deadlineType:Ref<"today" | "specific"> = ref("today")
 }) */
 const labelStore = localStorage.getItem('labels')
 const labels:Ref<LabelObject[]> = ref(labelStore ? JSON.parse(labelStore) : [])
+const todoLabels:Ref<LabelObject[]> = ref([])
 watch(labels, () => {
   localStorage.setItem("labels", JSON.stringify(labels.value))
 })
@@ -67,23 +69,28 @@ function addTodo() {
         <div v-if="!validTodoInput" class="text-red-500">You must enter a todo</div>
       </div>
       <div>
-        <div for="">Deadline: </div>
-        <input id="deadline-today" v-model="deadlineType" type="radio" name="deadline" value="today" />
-        <label for="deadline-today">Today</label>
-        <input id="deadline-specific" value="specific" type="radio" name="deadline" v-model="deadlineType" />
-        <label for="deadline-specific">custom</label>
+        <div for=""><label for="enable-deadline">Enable deadline</label> <input type="checkbox" name="" id="enable-deadline" v-model="deadlineEnabled" /></div>
+        <div v-if="deadlineEnabled">
+          <input id="deadline-today" v-model="deadlineType" type="radio" name="deadline" value="today" />
+          <label for="deadline-today">Today</label>
+          <input id="deadline-specific" value="specific" type="radio" name="deadline" v-model="deadlineType" />
+          <label for="deadline-specific">custom</label>
+        </div>
       </div>
-      <div>
+      <div v-if="deadlineEnabled">
+        <div>
+          <label for="time-deadline">Enter time</label>
+          <input type="time" id="deadline-time">
+        </div>
         <div v-if="deadlineType === 'specific'">
-          <input type="date">
-          <input type="time">
+          <label for="deadline-date">Enter date</label>
+          <input type="date" id="date-deadline">
         </div>
       </div>
       <div class="space-y-2">
         <div class="flex flex-wrap gap-2">
-            <template v-for="label in labels">
+            <template v-for="label in labels" :key="Math.random()">
                 <Label :hue-sat="label.hueSat" :text="label.text"/>
-
             </template>
         </div>
         <button @click.prevent="() => {
