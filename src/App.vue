@@ -120,18 +120,5 @@ window.addEventListener("keyup", (e) => {
   <h1>Vue app</h1>
 </template>
 
-<style lang="scss" scoped>
-main.content {
-  font-family: "Open Sans", Montserrat, sans-serif;
-  max-width: 49rem;
-  margin: auto;
-}
-
-div.button-container {
-  @apply flex gap-3 fixed bottom-2 right-2 items-center;
-
-  button {
-    @apply bg-gray-100 text-black p-2 hover:bg-gray-300 flex items-center gap-2;
-  }
-}
+<style scoped>
 </style>
