@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch, type Ref } from 'vue';
+/* import { onMounted, reactive, ref, watch, type Ref } from 'vue';
 import TodoForm from './components/TodoForm.vue';
 import TodoItems from './components/TodoItems.vue'
 import Modal from './components/Modal.vue'
@@ -58,10 +58,10 @@ window.addEventListener("keyup", (e) => {
       todoFormVisible.value = false
     }
   }
-})
+}) */
 </script>
 <template>
-  <main class="content">
+  <!--<main class="content">
     <h1 class="text-center">{{ time }}</h1>
     <Modal v-if="todoFormVisible.value" v-model:modal-open="todoFormVisible">
       <TodoForm v-model:todo-items="todoItems" v-model:modal-open="todoFormVisible" />
@@ -76,7 +76,7 @@ window.addEventListener("keyup", (e) => {
         </div>
       </div>
     </Modal>
-    <!-- 
+     
     <button @click="() => todoFormVisible = !todoFormVisible" v-if="todoFormVisible" class="absolute right-4 top-4 bg-slate-600 hover:bg-slate-900 text-white p-2 z-40">Close add todo</button>
      <div
       class="">
@@ -94,7 +94,7 @@ window.addEventListener("keyup", (e) => {
         <input type="text" v-model="selectedTodo.value.deadline">
         <button type="submit">Update</button>
       </form>
-    </div>-->
+    </div>
     <TodoItems :current-time-obj="currentTimeObj" v-model:todo-items="todoItems" v-model:selected-todo="selectedTodo" />
     <div class="button-container">
       <Tooltip :tooltip-message='"Reset all todos"' :position="'top'">
@@ -116,7 +116,8 @@ window.addEventListener("keyup", (e) => {
         <plus-icon height="20" width="20" /> Add Todo
       </button>
     </div>
-  </main>
+  </main>-->
+  <h1>Vue app</h1>
 </template>
 
 <style lang="scss" scoped>
