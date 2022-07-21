@@ -4,13 +4,23 @@ export type Todo = {
   text: string;
   id: string;
   deadline: string;
+  category: Categories
 };
 
-export const useTodoStore = defineStore("todo", {
+export type Categories = {
+  title: string,
+  color: string,
+}
+
+export const useTodoStore = defineStore("todos", {
   state: () => ({
     todos: [] as Todo[],
   }),
 });
 
-const todos = useTodoStore();
-todos.todos;
+
+export const useCategoryStore = defineStore("categories", {
+  state: () => ({
+    categories: [] as Categories[]
+  })
+})
