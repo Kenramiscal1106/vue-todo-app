@@ -3,6 +3,8 @@ import { useCurrentTime, useLocalStorage } from './lib/get';
 import type { Date } from './lib/utils';
 import { onMounted, ref, watch, type Ref } from 'vue';
 import { useCategoryStore, useTodoStore } from './lib/stores';
+import Sidebar from './components/Sidebar.vue';
+import Main from './components/Main.vue';
 
 const categories = useCategoryStore()
 const todos = useTodoStore()
@@ -36,7 +38,7 @@ setInterval(() => [
   currentTimeObj.value = useCurrentTime().hour24
 ], 1000)
 watch(currentTimeObj, () => {
-  console.log(currentTimeObj.value)
+  console.log(currentTimeObj.value.timeString())
 })
 /* const currentTimeObj: Ref<utils.Date> = ref(utils.currentTime().hour24);
 const time: Ref<string> = ref(utils.currentTime().hour12.timeString());
@@ -146,7 +148,10 @@ window.addEventListener("keyup", (e) => {
       </button>
     </div>
   </main>-->
-  <h1>Vue app</h1>
+  <div class="flex items-stretch w-full h-full">
+    <Sidebar></Sidebar>
+    <Main></Main>
+  </div>
 </template>
 
 <style scoped>
