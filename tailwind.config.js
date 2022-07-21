@@ -3,16 +3,19 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      textColor: {
-        "secondary": "hsl(0,0,0)",
-        "secondary-light": "hsl(0,0%,40%)",
-        "primary": "hsl(0,0%,100%)",
-        "primary-dark": "hsl(0,0,80%)",
+      backgroundColor: {
+        "primary-dark": "#dedede",
+        "primary": "#efefef",
+        "primary-light": "#fff",
+        "secondary-dark" : "#323232",
+        "secondary" : "#363636",
+        "secondary-light" : "#3D3D3D",
       },
-      fontSize: {
-        "sub": "0.9rem"
+      textColor: {
+        "primary": "#000",
+        "secondary": "#fff"
       }
-    },
+    }
   },
   plugins: [],
 };
