@@ -1,15 +1,44 @@
 <script setup lang="ts">
-/* import { onMounted, reactive, ref, watch, type Ref } from 'vue';
-import TodoForm from './components/TodoForm.vue';
-import TodoItems from './components/TodoItems.vue'
-import Modal from './components/Modal.vue'
-import * as utils from "./lib/utils"
-import ClearIcon from "./components/icons/ClearIcon.vue"
-import PlusIcon from "./components/icons/PlusIcon.vue"
-import CheckIcon from "./components/icons/CheckIcon.vue"
-import ResetIcon from "./components/icons/ResetIcon.vue"
-import Tooltip from "./components/Tooltip.vue"
-const currentTimeObj: Ref<utils.Date> = ref(utils.currentTime().hour24);
+import { useCurrentTime, useLocalStorage } from './lib/get';
+import type { Date } from './lib/utils';
+import { onMounted, ref, watch, type Ref } from 'vue';
+import { useCategoryStore, useTodoStore } from './lib/stores';
+
+const categories = useCategoryStore()
+const todos = useTodoStore()
+
+const categoryStore = useLocalStorage('categories')
+const todoStore = useLocalStorage('todos')
+onMounted(() => {
+  if (!categoryStore.value) {
+    console.log("no localstorage copy")
+    categories.$reset()
+    return
+  }
+  categories.$patch({value: JSON.parse(categoryStore.value)})
+})
+onMounted(() => {
+  if (!todoStore.value) {
+    console.log("no localstorage copy")
+    todos.$reset()
+    return
+  }
+  todos.$patch({value: JSON.parse(todoStore.value)}) 
+  
+})
+watch(todos, () => {
+  console.log(todos.value)
+  todoStore.set(JSON.stringify(todos.value))
+})
+
+const currentTimeObj: Ref<Date> = ref(useCurrentTime().hour24);
+setInterval(() => [
+  currentTimeObj.value = useCurrentTime().hour24
+], 1000)
+watch(currentTimeObj, () => {
+  console.log(currentTimeObj.value)
+})
+/* const currentTimeObj: Ref<utils.Date> = ref(utils.currentTime().hour24);
 const time: Ref<string> = ref(utils.currentTime().hour12.timeString());
 const todoItems = reactive<{ value: utils.Todo[] }>({ value: [] })
 const selectedTodo = reactive<{ value: null | utils.Todo }>({ value: null })
