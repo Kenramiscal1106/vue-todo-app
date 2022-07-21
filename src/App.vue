@@ -7,6 +7,8 @@ import Sidebar from './components/Sidebar.vue';
 import Main from './components/Main.vue';
 import AddCategory from './components/sidebar/AddCategory.vue';
 import Category from './components/sidebar/Category.vue';
+import TodoItem from './components/main/TodoItem.vue';
+import {v4 as randomUUID} from 'uuid'
 
 const categories = useCategoryStore()
 const todos = useTodoStore()
@@ -39,9 +41,6 @@ const currentTimeObj: Ref<Date> = ref(useCurrentTime().hour24);
 setInterval(() => [
   currentTimeObj.value = useCurrentTime().hour24
 ], 1000)
-watch(currentTimeObj, () => {
-  console.log(currentTimeObj.value.timeString())
-})
 /* const currentTimeObj: Ref<utils.Date> = ref(utils.currentTime().hour24);
 const time: Ref<string> = ref(utils.currentTime().hour12.timeString());
 const todoItems = reactive<{ value: utils.Todo[] }>({ value: [] })
@@ -157,7 +156,20 @@ window.addEventListener("keyup", (e) => {
       </Category>
       <AddCategory>Add Category</AddCategory>
     </Sidebar>
-    <Main></Main>
+    <Main>
+      <button @click="todos.$patch({value: []})">Clear all todos</button>
+      <button @click="todos.$patch({value: [...todos.value, {
+        category: {
+          id: '',
+          title: 'Important'
+        },
+        deadline: '',
+        done: false,
+        id: randomUUID(),
+        text: 'A text for the todo'
+      }]})">Add mock todos</button>
+      <TodoItem v-for="todo in todos.value" :todo="todo"/>
+    </Main>
   </div>
 </template>
 
