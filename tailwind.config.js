@@ -4,12 +4,12 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
-        "primary-dark": "#dedede",
-        "primary": "#efefef",
-        "primary-light": "#fff",
-        "secondary-dark" : "#323232",
-        "secondary" : "#363636",
-        "secondary-light" : "#3D3D3D",
+        "primary-dark": "hsl(0,0%,87%)",
+        "primary": "hsl(0,0%,94%)",
+        "primary-light": "hsl(0,0%,100%)",
+        "secondary-dark" : "hsl(0,0%,17%)",
+        "secondary" : "hsl(0,0%,24%)",
+        "secondary-light" : "hsl(0,0%,30%)",
       },
       textColor: {
         "primary": "#000",
