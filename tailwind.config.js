@@ -13,6 +13,10 @@ module.exports = {
         "accent": "#001233",
         "accent-hover": "#000E29",
       },
+      borderColor: {
+        "primary": "hsl(0,0%,87%)",
+        "secondary" : "hsl(0,0%,17%)",
+      },
       textColor: {
         "primary": "#000",
         "secondary": "#fff"
