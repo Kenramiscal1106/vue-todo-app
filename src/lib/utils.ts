@@ -1,3 +1,10 @@
+export type Date = {
+  timeString: Function;
+  hour: number;
+  minute: number;
+  seconds: number;
+  twelveHourSplit?: Function;
+};
 /* export type Date = {
   timeString: Function;
   hour: number;
