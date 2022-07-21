@@ -1,4 +1,4 @@
-export type Date = {
+/* export type Date = {
   timeString: Function;
   hour: number;
   minute: number;
@@ -135,4 +135,4 @@ interface Label {
 export interface LabelObject {
   hueSat:string,
   text:string,
-}
+} */
