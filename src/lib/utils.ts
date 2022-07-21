@@ -153,4 +153,5 @@ export type Todo = {
 export type Categories = {
   title: string,
   color: string,
+  id:string
 }
