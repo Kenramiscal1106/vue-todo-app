@@ -10,9 +10,9 @@ import { watch } from 'vue';
 </script>
 
 <template>
-  <div class="flex gap-2 p-2 items-center">
+  <div class="flex gap-2 p-2 items-center border-2 dark:border-secondary border-primary">
     <input type="checkbox" v-model="todo.done" >
-    <div>
+    <div class="flex-1">
       <div>{{todo.text}}</div>
     </div>
     <button class="p-1 border-red-500 hover:bg-red-600 active:bg-red-700 transition-colors border-2 group" @click="todos.$patch({value: todos.value.filter(todoStore => todoStore.id !== todo.id)})">
