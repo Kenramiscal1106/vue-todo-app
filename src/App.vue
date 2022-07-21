@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { useCurrentTime, useLocalStorage } from './lib/get';
 import type { Date } from './lib/utils';
-import { onMounted, ref, watch, type Ref } from 'vue';
+import { onMounted, reactive, ref, watch, type Ref } from 'vue';
 import { useCategoryStore, useTodoStore } from './lib/stores';
 import Sidebar from './components/Sidebar.vue';
 import Main from './components/Main.vue';
 import AddCategory from './components/sidebar/AddCategory.vue';
 import Category from './components/sidebar/Category.vue';
 import TodoItem from './components/main/TodoItem.vue';
+import CategoryEditor from './components/sidebar/CategoryEditor.vue';
 
 const categories = useCategoryStore()
 const todos = useTodoStore()
 
 const categoryStore = useLocalStorage('categories')
-const todoStore = useLocalStorage('todos')
+const todoStore = useLocalStorage('todos');
+const addCategoryVisible = reactive({value: false})
 onMounted(() => {
   if (!categoryStore.value) {
     console.log("no localstorage copy")
@@ -32,8 +34,10 @@ onMounted(() => {
 
 })
 watch(todos, () => {
-  console.log(todos.value)
   todoStore.set(JSON.stringify(todos.value))
+})
+watch(categories, () => {
+  categoryStore.set(JSON.stringify(categories.value))
 })
 
 const currentTimeObj: Ref<Date> = ref(useCurrentTime().hour24);
@@ -153,17 +157,10 @@ window.addEventListener("keyup", (e) => {
       <Category v-for="category in categories.value" :key="category.id">
         {{ category.title }}
       </Category>
-      <AddCategory>Add Category</AddCategory>
+      <CategoryEditor v-if="addCategoryVisible.value" v-model:addCategoryVisible="addCategoryVisible"/>
+      <AddCategory @click="addCategoryVisible.value = true">Add Category</AddCategory>
     </Sidebar>
     <Main>
-      <!-- <button @click="todos.$reset()">Clear all todos</button>
-      <button @click="todos.addItem({
-        categoryId: '',
-        deadline: 'January 1, 2022',
-        done: false,
-        id: randomUUID(),
-        text: 'testing'
-      })">Add mock todos</button> -->
 
       <TodoItem v-for="todo in todos.value" :todo="todo" />
       <div
