@@ -136,3 +136,14 @@ export interface LabelObject {
   hueSat:string,
   text:string,
 } */
+export type Todo = {
+  text: string;
+  id: string;
+  deadline: string;
+  category: Categories
+};
+
+export type Categories = {
+  title: string,
+  color: string,
+}
