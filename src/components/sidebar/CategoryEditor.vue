@@ -1,0 +1,29 @@
+<script setup lang='ts'>
+import { v4 as generateUUID} from 'uuid';
+import { useCategoryStore } from '../../lib/stores';
+  const {addCategoryVisible} = defineProps<{
+    addCategoryVisible: {
+      value: boolean
+    }
+  }>()
+  const category = useCategoryStore();
+  function addCategory(e) {
+    const formData = Object.fromEntries(new FormData(e.target).entries());
+    console.log(formData)
+    category.addCategory({
+      id: generateUUID(),
+      color: "",
+      ...formData
+    })
+    addCategoryVisible.value = false
+  }
+</script>
+<template>
+  <form @submit.prevent="addCategory" class="dark:bg-secondary bg-primary px-2 py-1 rounded-md">
+    <input type="text" name="title" id="" placeholder="Enter category name..." class="block bg-transparent outline-none text-white">
+  </form>
+
+</template>
+<style scoped>
+  
+</style>
