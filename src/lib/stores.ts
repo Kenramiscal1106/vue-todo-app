@@ -8,17 +8,20 @@ export const useTodoStore = defineStore("todos", {
   getters: {
     getTodosByCategory: (state) =>  {
       return (categoryId:string) => state.value.filter(todo => {
-        todo.category.id === categoryId
+        todo.categoryId === categoryId
       })
     }
   },
   actions: {
     removeItem(id:string) {
       this.value = this.value.filter((todo) => todo.id !== id)
+    },
+    addItem(todo:Todo) {
+      this.value.push(todo)
     }
   }
 });
-
+useTodoStore()
 export const useCategoryStore = defineStore("category", {
   state: () => ({
     value: [{
