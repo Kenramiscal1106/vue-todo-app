@@ -21,30 +21,10 @@ export const useTodoStore = defineStore("todos", {
     }
   }
 });
-useTodoStore()
+
 export const useCategoryStore = defineStore("category", {
   state: () => ({
-    value: [{
-      id: randomUUID(),
-      title: "Important",
-      color: "blue"
-    },{
-      id: randomUUID(),
-      title: "Important",
-      color: "blue"
-    },{
-      id: randomUUID(),
-      title: "Important",
-      color: "blue"
-    },{
-      id: randomUUID(),
-      title: "Important",
-      color: "blue"
-    },{
-      id: randomUUID(),
-      title: "Important",
-      color: "blue"
-    }] as Category[]
+    value: [] as Category[]
   }),
   actions: {
     addCategory(category: Category) {
