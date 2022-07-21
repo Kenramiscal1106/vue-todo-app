@@ -5,6 +5,8 @@ import { onMounted, ref, watch, type Ref } from 'vue';
 import { useCategoryStore, useTodoStore } from './lib/stores';
 import Sidebar from './components/Sidebar.vue';
 import Main from './components/Main.vue';
+import AddCategory from './components/sidebar/AddCategory.vue';
+import Category from './components/sidebar/Category.vue';
 
 const categories = useCategoryStore()
 const todos = useTodoStore()
@@ -149,7 +151,12 @@ window.addEventListener("keyup", (e) => {
     </div>
   </main>-->
   <div class="flex items-stretch w-full h-full">
-    <Sidebar></Sidebar>
+    <Sidebar :time="currentTimeObj.timeString()">
+      <Category v-for="category in categories.value" :key="category.id">
+        {{category.title}}
+      </Category>
+      <AddCategory>Add Category</AddCategory>
+    </Sidebar>
     <Main></Main>
   </div>
 </template>
