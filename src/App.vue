@@ -8,7 +8,6 @@ import Main from './components/Main.vue';
 import AddCategory from './components/sidebar/AddCategory.vue';
 import Category from './components/sidebar/Category.vue';
 import TodoItem from './components/main/TodoItem.vue';
-import {v4 as randomUUID} from 'uuid'
 
 const categories = useCategoryStore()
 const todos = useTodoStore()
@@ -21,7 +20,7 @@ onMounted(() => {
     categories.$reset()
     return
   }
-  categories.$patch({value: JSON.parse(categoryStore.value)})
+  categories.$patch({ value: JSON.parse(categoryStore.value) })
 })
 onMounted(() => {
   if (!todoStore.value) {
@@ -29,8 +28,8 @@ onMounted(() => {
     todos.$reset()
     return
   }
-  todos.$patch({value: JSON.parse(todoStore.value)}) 
-  
+  todos.$patch({ value: JSON.parse(todoStore.value) })
+
 })
 watch(todos, () => {
   console.log(todos.value)
@@ -152,23 +151,31 @@ window.addEventListener("keyup", (e) => {
   <div class="flex items-stretch w-full h-full">
     <Sidebar :time="currentTimeObj.timeString()">
       <Category v-for="category in categories.value" :key="category.id">
-        {{category.title}}
+        {{ category.title }}
       </Category>
       <AddCategory>Add Category</AddCategory>
     </Sidebar>
     <Main>
-      <button @click="todos.$patch({value: []})">Clear all todos</button>
-      <button @click="todos.$patch({value: [...todos.value, {
-        category: {
-          id: '',
-          title: 'Important'
-        },
-        deadline: '',
+      <!-- <button @click="todos.$reset()">Clear all todos</button>
+      <button @click="todos.addItem({
+        categoryId: '',
+        deadline: 'January 1, 2022',
         done: false,
         id: randomUUID(),
-        text: 'A text for the todo'
-      }]})">Add mock todos</button>
-      <TodoItem v-for="todo in todos.value" :todo="todo"/>
+        text: 'testing'
+      })">Add mock todos</button> -->
+
+      <TodoItem v-for="todo in todos.value" :todo="todo" />
+      <div
+        class="flex gap-2 p-2 items-center border-2 border-dotted hover:border-solid dark:border-secondary border-primary">
+        <svg viewBox="0 0 20 20" class="h-6 w-6 group-hover:scale-125" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M10 2.5C10.3452 2.5 10.625 2.77982 10.625 3.125V9.375H16.875C17.2202 9.375 17.5 9.65482 17.5 10C17.5 10.3452 17.2202 10.625 16.875 10.625H10.625V16.875C10.625 17.2202 10.3452 17.5 10 17.5C9.65482 17.5 9.375 17.2202 9.375 16.875V10.625H3.125C2.77982 10.625 2.5 10.3452 2.5 10C2.5 9.65482 2.77982 9.375 3.125 9.375H9.375V3.125C9.375 2.77982 9.65482 2.5 10 2.5Z"
+            fill="currentColor" />
+        </svg>
+        Add todo
+      </div>
     </Main>
   </div>
 </template>
