@@ -147,7 +147,7 @@ export type Todo = {
   text: string;
   id: string;
   deadline: string;
-  category: Categories,
+  categoryId: string,
   done:boolean
 };
 
