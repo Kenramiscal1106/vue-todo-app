@@ -10,6 +10,8 @@ module.exports = {
         "secondary-dark" : "hsl(0,0%,17%)",
         "secondary" : "hsl(0,0%,24%)",
         "secondary-light" : "hsl(0,0%,30%)",
+        "accent": "#001233",
+        "accent-hover": "#000E29",
       },
       textColor: {
         "primary": "#000",
