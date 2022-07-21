@@ -4,8 +4,5 @@
   "compilerOptions": {
     "composite": true,
     "types": ["node"],
-    "paths": {
-      "@lib": ["./src/lib"]
-    },
   }
 }
