@@ -1,17 +1,5 @@
 import { defineStore } from "pinia";
-
-export type Todo = {
-  text: string;
-  id: string;
-  deadline: string;
-  category: Categories
-};
-
-export type Categories = {
-  title: string,
-  color: string,
-}
-
+import type { Todo, Categories } from "./utils";
 export const useTodoStore = defineStore("todos", {
   state: () => ({
     todos: [] as Todo[],
