@@ -3,7 +3,7 @@ import { v4 as generateUUID} from 'uuid';
 import { useCategoryStore } from '../../lib/stores';
   const {addCategoryVisible} = defineProps<{
     addCategoryVisible: {
-      value: boolean
+      category: boolean
     }
   }>()
   const category = useCategoryStore();
@@ -15,7 +15,7 @@ import { useCategoryStore } from '../../lib/stores';
       color: "",
       ...formData
     })
-    addCategoryVisible.value = false
+    addCategoryVisible.category = false
   }
 </script>
 <template>
