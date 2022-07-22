@@ -7,9 +7,7 @@ export const useTodoStore = defineStore("todos", {
   }),
   getters: {
     getTodosByCategory: (state) =>  {
-      return (categoryId:string) => state.value.filter(todo => {
-        todo.categoryId === categoryId
-      })
+      return (categoryId:string) => state.value.filter(todo => todo.categoryId === categoryId)
     }
   },
   actions: {
@@ -25,7 +23,7 @@ export const useTodoStore = defineStore("todos", {
 export const useCategoryStore = defineStore("category", {
   state: () => ({
     value: [] as Category[],
-    currentIndex: 0
+    currentId: ""
   }),
   actions: {
     addCategory(category: Category) {
@@ -33,14 +31,17 @@ export const useCategoryStore = defineStore("category", {
     },
     removeCategory(categoryId:string) {
       this.value = this.value.filter(category => category.id !== categoryId)
+    },
+    setId(categoryId:string) {
+      this.currentId = categoryId
     }
   },
   getters: {
     currentCategory(state) {
-      if (state.value.length === 0 || state.currentIndex > state.value.length - 1) {
+      /* if (state.value.length === 0 || state.currentId > state.value.length - 1) {
         return null
       }
-      return state.value[state.currentIndex]
+      return state.value[state.currentId] */
     }
   }
 })
