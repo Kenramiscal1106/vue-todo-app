@@ -3,9 +3,6 @@ import { useTodoStore } from '../../lib/stores';
 import type { Todo } from '@lib/utils';
 import { watch } from 'vue';
   const todos = useTodoStore()
-  watch(todos, () => {
-    console.log(todos.value)
-  })
   const {todo} = defineProps<{todo:Todo}>()
 </script>
 
