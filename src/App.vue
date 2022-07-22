@@ -9,13 +9,14 @@ import AddCategory from './components/sidebar/AddCategory.vue';
 import Category from './components/sidebar/Category.vue';
 import TodoItem from './components/main/TodoItem.vue';
 import CategoryEditor from './components/sidebar/CategoryEditor.vue';
+import AddTodoItem from './components/main/AddTodoItem.vue';
 
 const categories = useCategoryStore()
 const todos = useTodoStore()
 
 const categoryStore = useLocalStorage('categories')
 const todoStore = useLocalStorage('todos');
-const addCategoryVisible = reactive({value: false})
+const addVisible = reactive({category: false, todo: false})
 onMounted(() => {
   if (!categoryStore.value) {
     console.log("no localstorage copy")
@@ -23,6 +24,9 @@ onMounted(() => {
     return
   }
   categories.$patch({ value: JSON.parse(categoryStore.value) })
+  if (categories.value.length !== 0) {
+    categories.setId(categories.value[0].id)
+  }
 })
 onMounted(() => {
   if (!todoStore.value) {
@@ -154,17 +158,18 @@ window.addEventListener("keyup", (e) => {
   </main>-->
   <div class="flex items-stretch w-full h-full">
     <Sidebar :time="currentTimeObj.timeString()">
-      <Category v-for="category in categories.value" :key="category.id">
+      <Category v-for="category in categories.value" :key="category.id" @click="categories.setId(category.id)" :class="{'dark:hover:bg-secondary-dark dark:bg-secondary-dark': category.id === categories.currentId}">
         {{ category.title }}
       </Category>
-      <CategoryEditor v-if="addCategoryVisible.value" v-model:addCategoryVisible="addCategoryVisible"/>
-      <AddCategory @click="addCategoryVisible.value = true">Add Category</AddCategory>
+      <CategoryEditor v-if="addVisible.category" v-model:addCategoryVisible="addVisible"/>
+      <AddCategory @click="addVisible.category = true">Add Category</AddCategory>
     </Sidebar>
     <Main>
 
-      <TodoItem v-for="todo in todos.value" :todo="todo" />
-      <div
-        class="flex gap-2 p-2 items-center border-2 border-dotted hover:border-solid dark:border-secondary border-primary">
+      <TodoItem v-for="todo in todos.getTodosByCategory(categories.currentId)" :todo="todo" />
+      <AddTodoItem v-if="addVisible.todo" v-model:todoVisible="addVisible"/>
+      <button @click="addVisible.todo = true"
+        class="flex w-full gap-2 p-2 items-center border-2 border-dotted hover:border-solid dark:border-secondary border-primary">
         <svg viewBox="0 0 20 20" class="h-6 w-6 group-hover:scale-125" fill="none"
           xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" clip-rule="evenodd"
@@ -172,7 +177,7 @@ window.addEventListener("keyup", (e) => {
             fill="currentColor" />
         </svg>
         Add todo
-      </div>
+      </button>
     </Main>
   </div>
 </template>
