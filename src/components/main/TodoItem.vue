@@ -1,17 +1,16 @@
 <script setup lang='ts'>
 import { useTodoStore } from '../../lib/stores';
 import type { Todo } from '@lib/utils';
-import { watch } from 'vue';
   const todos = useTodoStore()
   const {todo} = defineProps<{todo:Todo}>()
 </script>
 
 <template>
   <div class="flex gap-2 p-2 items-center border-2 dark:border-secondary border-primary">
-    <input type="checkbox" v-model="todo.done" >
+    <input type="checkbox" class="h-6 w-6 bg-transparent dark:accent-secondary  accent-primary" v-model="todo.done" >
     <div class="flex-1">
       <div>{{todo.text}}</div>
-      <div class="text-accent dark:text-secondary-accent text-xs">{{todo.deadline === "" ? "No deadline" : todo.deadline}}</div>
+      <div class="text-accent dark:text-secondary-accent text-xs">{{todo.deadline === "" ? "No deadline" : new Date(todo.deadline).toTimeString()}}</div>
     </div>
     <button class="p-1 border-red-500 hover:bg-red-600 active:bg-red-700 transition-colors border-2 group" @click="todos.removeItem(todo.id)">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
