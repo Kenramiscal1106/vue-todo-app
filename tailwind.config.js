@@ -12,6 +12,9 @@ module.exports = {
         "secondary-light" : "hsl(0,0%,24%)",
         "accent": "#001233",
         "accent-hover": "#000E29",
+      },accentColor: {
+        "primary": "hsl(0,0%,85%)",
+        "secondary" : "hsl(0,0%,15%)",
       },
       borderColor: {
         "primary": "hsl(0,0%,87%)",
