@@ -13,7 +13,6 @@ import AddTodoItem from './components/main/AddTodoItem.vue';
 
 const categories = useCategoryStore()
 const todos = useTodoStore()
-
 const categoryStore = useLocalStorage('categories')
 const todoStore = useLocalStorage('todos');
 const addVisible = reactive({category: false, todo: false})
@@ -98,6 +97,11 @@ window.addEventListener("keyup", (e) => {
     }
   }
 }) */
+function handleKeyDown(e:any) {
+  if (e.key.toLowerCase() === "escape") {
+    addVisible.category = false
+  }
+}
 </script>
 <template>
   <!--<main class="content">
@@ -158,26 +162,29 @@ window.addEventListener("keyup", (e) => {
   </main>-->
   <div class="flex items-stretch w-full h-full">
     <Sidebar :time="currentTimeObj.timeString()">
-      <Category v-for="category in categories.value" :key="category.id" @click="categories.setId(category.id)" :class="{'dark:hover:bg-secondary-dark dark:bg-secondary-dark': category.id === categories.currentId}">
+      <Category v-for="category in categories.value" :key="category.id" @click="categories.setId(category.id)" :is-active="category.id === categories.currentId">
         {{ category.title }}
       </Category>
-      <CategoryEditor v-if="addVisible.category" v-model:addCategoryVisible="addVisible"/>
+      <CategoryEditor v-if="addVisible.category" v-model:addCategoryVisible="addVisible" @keydown="handleKeyDown"/>
       <AddCategory @click="addVisible.category = true">Add Category</AddCategory>
     </Sidebar>
     <Main>
-
-      <TodoItem v-for="todo in todos.getTodosByCategory(categories.currentId)" :todo="todo" />
-      <AddTodoItem v-if="addVisible.todo" v-model:todoVisible="addVisible"/>
-      <button @click="addVisible.todo = true"
-        class="flex w-full gap-2 p-2 items-center border-2 border-dotted hover:border-solid dark:border-secondary border-primary">
-        <svg viewBox="0 0 20 20" class="h-6 w-6 group-hover:scale-125" fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M10 2.5C10.3452 2.5 10.625 2.77982 10.625 3.125V9.375H16.875C17.2202 9.375 17.5 9.65482 17.5 10C17.5 10.3452 17.2202 10.625 16.875 10.625H10.625V16.875C10.625 17.2202 10.3452 17.5 10 17.5C9.65482 17.5 9.375 17.2202 9.375 16.875V10.625H3.125C2.77982 10.625 2.5 10.3452 2.5 10C2.5 9.65482 2.77982 9.375 3.125 9.375H9.375V3.125C9.375 2.77982 9.65482 2.5 10 2.5Z"
-            fill="currentColor" />
-        </svg>
-        Add todo
-      </button>
+      <template v-if="categories.value.length !== 0">
+        <TodoItem v-for="todo in todos.getTodosByCategory(categories.currentId)" :todo="todo" v-if="todos.getTodosByCategory(categories.currentId).length !== 0"/>
+        <h3 v-else>Looks like there are no todos in this category.</h3>
+        <AddTodoItem v-if="addVisible.todo" v-model:todoVisible="addVisible"/>
+        <button @click="addVisible.todo = true"
+          class="flex w-full gap-2 p-2 items-center border-2 border-dotted hover:border-solid dark:border-secondary border-primary">
+          <svg viewBox="0 0 20 20" class="h-6 w-6 group-hover:scale-125" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M10 2.5C10.3452 2.5 10.625 2.77982 10.625 3.125V9.375H16.875C17.2202 9.375 17.5 9.65482 17.5 10C17.5 10.3452 17.2202 10.625 16.875 10.625H10.625V16.875C10.625 17.2202 10.3452 17.5 10 17.5C9.65482 17.5 9.375 17.2202 9.375 16.875V10.625H3.125C2.77982 10.625 2.5 10.3452 2.5 10C2.5 9.65482 2.77982 9.375 3.125 9.375H9.375V3.125C9.375 2.77982 9.65482 2.5 10 2.5Z"
+              fill="currentColor" />
+          </svg>
+          Add todo
+        </button>
+      </template>
+      <h4 v-else>Add a category first</h4>
     </Main>
   </div>
 </template>
