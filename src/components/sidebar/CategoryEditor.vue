@@ -12,8 +12,10 @@ import { useCategoryStore } from '../../lib/stores';
     input.value.focus()
   })
   const category = useCategoryStore();
-  function addCategory(e) {
-    const formData = Object.fromEntries(new FormData(e.target).entries());
+  function addCategory(e:any) {
+    const formData = Object.fromEntries(new FormData(e.target).entries()) as {
+      title:string
+    }
     category.addCategory({
       id: generateUUID(),
       color: "",

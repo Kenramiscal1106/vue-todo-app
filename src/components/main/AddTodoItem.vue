@@ -16,7 +16,10 @@ import { onMounted, ref } from 'vue';
   const categories = useCategoryStore();
   const todos = useTodoStore();
   function formHandler(e:any) {
-    const formData = Object.fromEntries(new FormData(e.target).entries()) as Todo;
+    const formData = Object.fromEntries(new FormData(e.target).entries()) as {
+      text:string,
+      deadline:string,
+    };
     if (formData.text === "") {
       alert("you haven't entered a deadline / text")
       return
