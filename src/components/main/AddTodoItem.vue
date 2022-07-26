@@ -34,7 +34,7 @@ import Button from '../Button.vue';
     </div>
     <div class="flex gap-2">
       <Button type="submit" :accent="true">submit</Button>
-      <Button @click.prevent="todoVisible.todo = false">Cancel</Button>
+      <Button @click.prevent="todoVisible.todo = false" :accent="false">Cancel</Button>
     </div>
   </form>
 </template>
