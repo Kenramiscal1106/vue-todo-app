@@ -151,7 +151,7 @@ export type Todo = {
   done:boolean
 };
 
-export type Categories = {
+export type Category = {
   title: string,
   color: string,
   id:string
