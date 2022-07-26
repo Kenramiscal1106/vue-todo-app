@@ -13,6 +13,9 @@ export const useTodoStore = defineStore("todos", {
     removeItem(id:string) {
       this.value = this.value.filter((todo) => todo.id !== id)
     },
+    removeItemsByCategory(categoryId:string) {
+      this.value = this.value.filter(todo => todo.categoryId !== categoryId)
+    },
     addItem(todo:Todo) {
       this.value.push(todo)
     }
