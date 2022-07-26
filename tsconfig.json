@@ -6,6 +6,11 @@
     "paths": {
       "@lib/*": ["./src/lib/*"]
     },
+    "lib": [
+      "ESNext",
+      "dom",
+      "dom.iterable" 
+    ],
     "strict": true,
   },
 
@@ -13,5 +18,6 @@
     {
       "path": "./tsconfig.vite-config.json"
     }
-  ]
+  ],
+
 }
