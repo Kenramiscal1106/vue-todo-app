@@ -1,6 +1,5 @@
-import { defineStore } from "pinia";
-import type { Todo, Categories as Category } from "./utils";
-import {v4 as randomUUID} from "uuid"
+import { acceptHMRUpdate, defineStore } from "pinia";
+import type { Todo, Category } from "./utils";
 export const useTodoStore = defineStore("todos", {
   state: () => ({
     value: [] as Todo[],
@@ -42,6 +41,20 @@ export const useCategoryStore = defineStore("category", {
         return null
       }
       return state.value[state.currentId] */
+      if (state.value.length === 0 || state.currentId === "") {
+        return null
+      }
+      const currentCategoryValue = state.value.find(category => category.id === state.currentId)
+      if (typeof currentCategoryValue === "undefined") return null;
+      return currentCategoryValue
+    },
+    lastCategory: (state) => {
+      return state.value[state.value.length - 1]
     }
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useCategoryStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useTodoStore, import.meta.hot))
+}
