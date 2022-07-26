@@ -1,11 +1,16 @@
 <script setup lang='ts'>
 import { v4 as generateUUID} from 'uuid';
+import { onMounted, ref } from 'vue';
 import { useCategoryStore } from '../../lib/stores';
   const {addCategoryVisible} = defineProps<{
     addCategoryVisible: {
       category: boolean
     }
   }>()
+  const input = ref<any>(null)
+  onMounted(() => {
+    input.value.focus()
+  })
   const category = useCategoryStore();
   function addCategory(e) {
     const formData = Object.fromEntries(new FormData(e.target).entries());
@@ -20,7 +25,7 @@ import { useCategoryStore } from '../../lib/stores';
 </script>
 <template>
   <form @submit.prevent="addCategory" class="dark:bg-secondary bg-primary px-2 py-1 rounded-md" autocomplete="off">
-    <input type="text" name="title" id="" placeholder="Enter category name..." class="block bg-transparent outline-none text-white">
+    <input type="text" name="title" id="" placeholder="Enter category name..." class="block bg-transparent outline-none text-white" ref="input">
   </form>
 
 </template>
