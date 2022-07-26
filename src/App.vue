@@ -162,16 +162,14 @@ function handleKeyDown(e:any) {
   </main>-->
   <div class="flex items-stretch w-full h-full">
     <Sidebar :time="currentTimeObj.timeString()">
-      <Category v-for="category in categories.value" :key="category.id" @click="categories.setId(category.id)" :is-active="category.id === categories.currentId">
-        {{ category.title }}
-      </Category>
+      <Category v-for="category in categories.value" :key="category.id" @click="categories.setId(category.id)" :is-active="category.id === categories.currentId" :value="category"/>
       <CategoryEditor v-if="addVisible.category" v-model:addCategoryVisible="addVisible" @keydown="handleKeyDown"/>
       <AddCategory @click="addVisible.category = true">Add Category</AddCategory>
     </Sidebar>
     <Main>
       <template v-if="categories.value.length !== 0">
         <TodoItem v-for="todo in todos.getTodosByCategory(categories.currentId)" :todo="todo" v-if="todos.getTodosByCategory(categories.currentId).length !== 0"/>
-        <h3 v-else>Looks like there are no todos in this category.</h3>
+        <h3 v-else>Looks like there are no todos in the {{categories.currentCategory ? '"' + categories.currentCategory.title + '"': "unknow"}} category.</h3>
         <AddTodoItem v-if="addVisible.todo" v-model:todoVisible="addVisible"/>
         <button @click="addVisible.todo = true"
           class="flex w-full gap-2 p-2 items-center border-2 border-dotted hover:border-solid dark:border-secondary border-primary">
