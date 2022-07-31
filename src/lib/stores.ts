@@ -5,38 +5,49 @@ export const useTodoStore = defineStore("todos", {
     value: [] as Todo[],
   }),
   getters: {
-    getTodosByCategory: (state) =>  {
-      return (categoryId:string) => state.value.filter(todo => todo.categoryId === categoryId)
-    }
+    getTodosByCategory: (state) => {
+      return (categoryId: string) =>
+        state.value.filter((todo) => todo.categoryId === categoryId);
+    },
   },
   actions: {
-    removeItem(id:string) {
-      this.value = this.value.filter((todo) => todo.id !== id)
+    removeItem(id: string) {
+      this.value = this.value.filter((todo) => todo.id !== id);
     },
-    removeItemsByCategory(categoryId:string) {
-      this.value = this.value.filter(todo => todo.categoryId !== categoryId)
+    removeItemsByCategory(categoryId: string) {
+      this.value = this.value.filter((todo) => todo.categoryId !== categoryId);
     },
-    addItem(todo:Todo) {
-      this.value.push(todo)
-    }
-  }
+    addItem(todo: Todo) {
+      this.value.push(todo);
+    },
+  },
+});
+export const useStyleStore = defineStore("options", {
+  state: () => ({
+    collapseVisible: false,
+  }),
+  actions: {
+    toggleCollapseVisible() {
+      this.collapseVisible = !this.collapseVisible;
+    },
+  },
 });
 
 export const useCategoryStore = defineStore("category", {
   state: () => ({
     value: [] as Category[],
-    currentId: ""
+    currentId: "",
   }),
   actions: {
     addCategory(category: Category) {
-      this.value.push(category)
+      this.value.push(category);
     },
-    removeCategory(categoryId:string) {
-      this.value = this.value.filter(category => category.id !== categoryId)
+    removeCategory(categoryId: string) {
+      this.value = this.value.filter((category) => category.id !== categoryId);
     },
-    setId(categoryId:string) {
-      this.currentId = categoryId
-    }
+    setId(categoryId: string) {
+      this.currentId = categoryId;
+    },
   },
   getters: {
     currentCategory(state) {
@@ -45,19 +56,21 @@ export const useCategoryStore = defineStore("category", {
       }
       return state.value[state.currentId] */
       if (state.value.length === 0 || state.currentId === "") {
-        return null
+        return null;
       }
-      const currentCategoryValue = state.value.find(category => category.id === state.currentId)
+      const currentCategoryValue = state.value.find(
+        (category) => category.id === state.currentId
+      );
       if (typeof currentCategoryValue === "undefined") return null;
-      return currentCategoryValue
+      return currentCategoryValue;
     },
     lastCategory: (state) => {
-      return state.value[state.value.length - 1]
-    }
-  }
-})
+      return state.value[state.value.length - 1];
+    },
+  },
+});
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useCategoryStore, import.meta.hot))
-  import.meta.hot.accept(acceptHMRUpdate(useTodoStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useCategoryStore, import.meta.hot));
+  import.meta.hot.accept(acceptHMRUpdate(useTodoStore, import.meta.hot));
 }
