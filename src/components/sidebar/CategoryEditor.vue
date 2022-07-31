@@ -27,7 +27,7 @@ import { useCategoryStore } from '../../lib/stores';
 </script>
 <template>
   <form @submit.prevent="addCategory" class="dark:bg-secondary bg-primary px-2 py-1 rounded-md" autocomplete="off">
-    <input type="text" name="title" id="" placeholder="Enter category name..." class="block bg-transparent outline-none text-white" ref="input">
+    <input type="text" name="title" id="" placeholder="Enter category name..." class="block bg-transparent outline-none text-white" ref="input" />
   </form>
 
 </template>
