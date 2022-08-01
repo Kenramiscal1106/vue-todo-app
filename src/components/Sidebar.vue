@@ -10,8 +10,8 @@ const style = useStyleStore()
 
   </div>
   <aside
-    class="absolute w-64 top-0 h-full md:static flex-grow-0 flex-shrink-0 basis-64 bg-primary-light dark:bg-secondary-light space-y-2 px-4 py-3 overflow-auto"
-    :class="{ '-left-full': !style.collapseVisible }">
+    class="absolute w-64 top-0 h-full transition-[left] duration-300 md:static flex-grow-0 flex-shrink-0 basis-64 bg-primary-light dark:bg-secondary-light space-y-2 px-4 py-3 overflow-auto"
+    :class="[!style.collapseVisible ? '-left-full' : 'left-0']">
     <div class="flex items-center gap-3">
       <h3 class="font-semibold">Categories</h3>
       <h4 class="font-medium">{{ time }}</h4>
